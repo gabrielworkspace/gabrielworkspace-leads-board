@@ -114,7 +114,11 @@ export function useDashboardData(userId: string | null) {
       promisedate: leadData.promiseDate,
       service_type: leadData.serviceType
     };
-    const { data } = await supabase.from('leads').insert([dbPayload]).select().single();
+    const { data, error } = await supabase.from('leads').insert([dbPayload]).select().single();
+    if (error) {
+      console.error("Supabase insert error:", error);
+      alert(`Erro ao criar lead: ${error.message}\n\nVerifique se a coluna 'service_type' foi criada na tabela 'leads' no Supabase.`);
+    }
     if (data) {
       setLeads(prev => [{ ...data, promiseDate: data.promisedate, serviceType: data.service_type }, ...prev]);
     }
@@ -129,7 +133,11 @@ export function useDashboardData(userId: string | null) {
     if (leadData.promiseDate !== undefined) dbPayload.promisedate = leadData.promiseDate;
     if (leadData.serviceType !== undefined) dbPayload.service_type = leadData.serviceType;
 
-    const { data } = await supabase.from('leads').update(dbPayload).eq('id', id).eq('user_id', userId).select().single();
+    const { data, error } = await supabase.from('leads').update(dbPayload).eq('id', id).eq('user_id', userId).select().single();
+    if (error) {
+      console.error("Supabase update error:", error);
+      alert(`Erro ao atualizar lead: ${error.message}\n\nVerifique se a coluna 'service_type' foi criada na tabela 'leads' no Supabase.`);
+    }
     if (data) {
       setLeads(prev => prev.map(l => l.id === id ? { ...data, promiseDate: data.promisedate, serviceType: data.service_type } : l));
     }
