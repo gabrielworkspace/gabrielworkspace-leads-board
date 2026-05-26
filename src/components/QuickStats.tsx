@@ -3,7 +3,6 @@ import type { DailyMetrics } from '../types';
 
 export function QuickStats({ metrics }: { metrics: DailyMetrics[] }) {
   const latest = metrics[metrics.length - 1] || { messagesSent: 0, lpRevenue: 0, adSpend: 0 };
-  const profit = latest.lpRevenue - latest.adSpend;
 
   return (
     <div className="holo-panel p-6 flex flex-col h-[340px] relative">
