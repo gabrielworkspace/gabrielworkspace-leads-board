@@ -4,6 +4,7 @@ import { TopBar } from './components/TopBar';
 import { ProgressChart } from './components/ProgressChart';
 import { QuickStats } from './components/QuickStats';
 import { DailySummary } from './components/DailySummary';
+import { FinancialSummary } from './components/FinancialSummary';
 import { LeadsTable } from './components/LeadsTable';
 import { DataEntryModal } from './components/DataEntryModal';
 import { Login } from './components/Login';
@@ -42,6 +43,7 @@ function App() {
   const [activeView, setActiveView] = useState('Visão Geral');
   const [dateFilter, setDateFilter] = useState('30');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalInitialTab, setModalInitialTab] = useState<'outreach' | 'financial' | 'leads' | 'settings'>('outreach');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { metrics, leads, updateTodayMetrics, addLead, removeLead, clearData, loading } = useDashboardData();
   
@@ -57,6 +59,11 @@ function App() {
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('@NexusBoard:auth');
+  };
+
+  const openModal = (tab: 'outreach' | 'financial' | 'leads' | 'settings' = 'outreach') => {
+    setModalInitialTab(tab);
+    setIsModalOpen(true);
   };
 
   const filteredMetrics = useMemo(() => {
@@ -99,8 +106,13 @@ function App() {
               {/* TOP GRID: 3 Columns */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
                 <ProgressChart metrics={filteredMetrics} />
-                <QuickStats metrics={filteredMetrics} />
+                <QuickStats metrics={filteredMetrics} onEditMetrics={() => openModal('outreach')} onEditAds={() => openModal('financial')} />
                 <DailySummary metrics={filteredMetrics} leads={leads} />
+              </div>
+              
+              {/* FINANCIAL BREAKDOWN */}
+              <div className="w-full">
+                <FinancialSummary metrics={filteredMetrics} leads={leads} />
               </div>
               
               {/* BOTTOM GRID: Table */}
@@ -135,7 +147,7 @@ function App() {
       </div>
 
       <button 
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => openModal('outreach')}
         className="fixed bottom-6 right-6 lg:bottom-10 lg:right-10 w-14 h-14 bg-[#00A3FF] rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,163,255,0.4)] hover:bg-[#008AE6] hover:scale-110 active:scale-95 transition-all z-50 text-white"
         title="Add Data"
       >
@@ -149,6 +161,7 @@ function App() {
         onSaveMetrics={updateTodayMetrics}
         onAddLead={addLead}
         onClearData={clearData}
+        initialTab={modalInitialTab}
       />
     </div>
   );

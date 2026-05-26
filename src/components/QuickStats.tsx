@@ -1,7 +1,7 @@
 import { Clock, Play, MoreHorizontal, ArrowUpRight } from 'lucide-react';
 import type { DailyMetrics } from '../types';
 
-export function QuickStats({ metrics }: { metrics: DailyMetrics[] }) {
+export function QuickStats({ metrics, onEditMetrics, onEditAds }: { metrics: DailyMetrics[], onEditMetrics?: () => void, onEditAds?: () => void }) {
   const latest = metrics[metrics.length - 1] || { messagesSent: 0, lpRevenue: 0, adSpend: 0 };
 
   return (
@@ -38,7 +38,9 @@ export function QuickStats({ metrics }: { metrics: DailyMetrics[] }) {
            </div>
            <div className="flex items-center gap-3">
              <span className="text-xs text-white font-medium">{latest.messagesSent} msg</span>
-             <MoreHorizontal className="w-4 h-4 text-gray-600 opacity-0 group-hover:opacity-100" />
+             <button onClick={onEditMetrics} className="p-1 hover:bg-white/10 rounded-md transition-colors opacity-0 group-hover:opacity-100">
+               <MoreHorizontal className="w-4 h-4 text-gray-400 hover:text-white" />
+             </button>
            </div>
         </div>
         
@@ -54,7 +56,9 @@ export function QuickStats({ metrics }: { metrics: DailyMetrics[] }) {
            </div>
            <div className="flex items-center gap-3">
              <span className="text-xs text-white font-medium">R$ {latest.adSpend}</span>
-             <MoreHorizontal className="w-4 h-4 text-gray-600 opacity-0 group-hover:opacity-100" />
+             <button onClick={onEditAds} className="p-1 hover:bg-white/10 rounded-md transition-colors opacity-0 group-hover:opacity-100">
+               <MoreHorizontal className="w-4 h-4 text-gray-400 hover:text-white" />
+             </button>
            </div>
         </div>
       </div>

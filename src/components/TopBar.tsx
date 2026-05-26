@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Calendar, MessageSquare, Bell, Menu } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, Bell, Menu } from 'lucide-react';
 import profilePic from '../../img/WhatsApp Image 2026-05-22 at 14.11.20(1).jpeg';
 
 interface Props {
@@ -8,6 +8,9 @@ interface Props {
 }
 
 export function TopBar({ dateFilter, setDateFilter, onOpenSidebar }: Props) {
+  const now = new Date();
+  const isAfter10PM = now.getHours() >= 22;
+
   return (
     <header className="flex flex-col gap-6 lg:gap-8 mb-6 lg:mb-8 mt-2">
       <div className="flex flex-col lg:flex-row justify-between lg:items-center w-full gap-4">
@@ -22,10 +25,9 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar }: Props) {
            </div>
            
            <div className="flex items-center gap-2 lg:hidden">
-              <button className="w-9 h-9 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400"><MessageSquare size={14}/></button>
-              <button className="w-9 h-9 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 relative">
+              <button className="w-9 h-9 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 relative transition-colors hover:text-white">
                 <Bell size={14}/>
-                <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-[#00A3FF] rounded-full shadow-[0_0_8px_#00A3FF]"></span>
+                {isAfter10PM && <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-[#00A3FF] rounded-full shadow-[0_0_8px_#00A3FF]"></span>}
               </button>
               <img src={profilePic} className="w-9 h-9 rounded-xl object-cover ml-1 border border-white/10" alt="Profile"/>
            </div>
@@ -47,10 +49,9 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar }: Props) {
            </div>
            
            <div className="hidden lg:flex items-center gap-2 ml-4">
-             <button className="w-10 h-10 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors"><MessageSquare size={16}/></button>
              <button className="w-10 h-10 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors relative">
                <Bell size={16}/>
-               <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[#00A3FF] rounded-full shadow-[0_0_8px_#00A3FF]"></span>
+               {isAfter10PM && <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[#00A3FF] rounded-full shadow-[0_0_8px_#00A3FF]"></span>}
              </button>
              <img src={profilePic} className="w-10 h-10 rounded-xl object-cover ml-2 border border-white/10" alt="Profile"/>
            </div>

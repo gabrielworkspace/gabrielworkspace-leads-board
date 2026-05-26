@@ -41,7 +41,19 @@ export function LeadsTable({ leads, onRemoveLead }: Props) {
                     </span>
                   ) : '--'}
                 </td>
-                <td className="py-4 text-xs text-gray-300">{lead.value ? `R$ ${lead.value}` : '--'}</td>
+                <td className="py-4 text-xs">
+                  {lead.value ? (
+                    lead.status === 'Closed' ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20 rounded-lg font-bold text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)] tracking-wide">
+                        R$ {lead.value.toLocaleString('pt-BR')}
+                      </span>
+                    ) : (
+                      <span className="text-gray-300">R$ {lead.value.toLocaleString('pt-BR')}</span>
+                    )
+                  ) : (
+                    <span className="text-gray-500">--</span>
+                  )}
+                </td>
                 <td className="py-4">
                   <span className={`px-3 py-1 rounded-md text-[10px] font-bold tracking-wide ${
                     lead.status === 'Replied' ? 'bg-[#3B82F6]/10 text-[#3B82F6]' :

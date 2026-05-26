@@ -10,9 +10,10 @@ interface Props {
   onSaveMetrics: (data: Partial<DailyMetrics>, isIncremental?: boolean) => void;
   onAddLead: (lead: { name: string; status: LeadStatus; value?: number; promiseDate?: string }) => void;
   onClearData: () => void;
+  initialTab?: 'outreach' | 'financial' | 'leads' | 'settings';
 }
 
-export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics, onAddLead, onClearData }: Props) {
+export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics, onAddLead, onClearData, initialTab = 'outreach' }: Props) {
   const [tab, setTab] = useState<'outreach' | 'financial' | 'leads' | 'settings'>('outreach');
   
   const [metricsForm, setMetricsForm] = useState({
@@ -41,9 +42,9 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
       } else {
         setMetricsForm({ messagesSent: '', messagesReplied: '', adSpend: '', lpRevenue: '' });
       }
-      setTab('outreach');
+      setTab(initialTab);
     }
-  }, [isOpen, currentMetrics]);
+  }, [isOpen, currentMetrics, initialTab]);
 
   const handleSaveMetrics = (e: React.FormEvent) => {
     e.preventDefault();
