@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight, Calendar, Bell, Menu } from 'lucide-react';
 import profilePic from '../../img/WhatsApp Image 2026-05-22 at 14.11.20(1).jpeg';
+import mateusPic from '../../img/WhatsApp Image 2026-05-22 at 14.31.57.jpeg';
 
 interface Props {
   dateFilter: string;
@@ -12,6 +13,7 @@ interface Props {
 
 export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport, activeView, userId }: Props) {
   const displayName = userId === 'mateus' ? 'Mateus' : 'Gabriel';
+  const currentPic = userId === 'mateus' ? mateusPic : profilePic;
   const now = new Date();
   const todayStr = now.toISOString().split('T')[0];
   const isAfter10PM = now.getHours() >= 22;
@@ -60,7 +62,7 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport,
                 <Bell size={14}/>
                 {showNotification && <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-[#00A3FF] rounded-full shadow-[0_0_8px_#00A3FF]"></span>}
               </button>
-              <img src={profilePic} className="w-9 h-9 rounded-xl object-cover ml-1 border border-white/10" alt="Profile"/>
+              <img src={currentPic} className="w-9 h-9 rounded-xl object-cover ml-1 border border-white/10" alt="Profile"/>
            </div>
          </div>
          
@@ -100,7 +102,7 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport,
                <Bell size={16}/>
                {showNotification && <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[#00A3FF] rounded-full shadow-[0_0_8px_#00A3FF]"></span>}
              </button>
-             <img src={profilePic} className="w-10 h-10 rounded-xl object-cover ml-2 border border-white/10" alt="Profile"/>
+             <img src={currentPic} className="w-10 h-10 rounded-xl object-cover ml-2 border border-white/10" alt="Profile"/>
            </div>
          </div>
       </div>
