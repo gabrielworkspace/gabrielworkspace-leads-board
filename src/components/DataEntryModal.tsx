@@ -13,13 +13,13 @@ interface Props {
 }
 
 export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics, onAddLead, onClearData }: Props) {
-  const [tab, setTab] = useState<'metrics' | 'leads' | 'settings'>('metrics');
+  const [tab, setTab] = useState<'outreach' | 'financial' | 'leads' | 'settings'>('outreach');
   
   const [metricsForm, setMetricsForm] = useState({
-    messagesSent: 0,
-    messagesReplied: 0,
-    adSpend: 0,
-    lpRevenue: 0,
+    messagesSent: '',
+    messagesReplied: '',
+    adSpend: '',
+    lpRevenue: '',
   });
 
   const [leadForm, setLeadForm] = useState({
@@ -32,10 +32,10 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
   useEffect(() => {
     if (currentMetrics && isOpen) {
       setMetricsForm({
-        messagesSent: currentMetrics.messagesSent || 0,
-        messagesReplied: currentMetrics.messagesReplied || 0,
-        adSpend: currentMetrics.adSpend || 0,
-        lpRevenue: currentMetrics.lpRevenue || 0,
+        messagesSent: currentMetrics.messagesSent !== undefined ? currentMetrics.messagesSent.toString() : '',
+        messagesReplied: currentMetrics.messagesReplied !== undefined ? currentMetrics.messagesReplied.toString() : '',
+        adSpend: currentMetrics.adSpend !== undefined ? currentMetrics.adSpend.toString() : '',
+        lpRevenue: currentMetrics.lpRevenue !== undefined ? currentMetrics.lpRevenue.toString() : '',
       });
     }
   }, [currentMetrics, isOpen]);
@@ -43,10 +43,10 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
   const handleSaveMetrics = (e: React.FormEvent) => {
     e.preventDefault();
     onSaveMetrics({
-      messagesSent: Number(metricsForm.messagesSent),
-      messagesReplied: Number(metricsForm.messagesReplied),
-      adSpend: Number(metricsForm.adSpend),
-      lpRevenue: Number(metricsForm.lpRevenue),
+      messagesSent: metricsForm.messagesSent === '' ? 0 : Number(metricsForm.messagesSent),
+      messagesReplied: metricsForm.messagesReplied === '' ? 0 : Number(metricsForm.messagesReplied),
+      adSpend: metricsForm.adSpend === '' ? 0 : Number(metricsForm.adSpend),
+      lpRevenue: metricsForm.lpRevenue === '' ? 0 : Number(metricsForm.lpRevenue),
     });
     onClose();
   };
@@ -61,19 +61,16 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
     });
     setLeadForm({ name: '', status: 'Replied', value: '', promiseDate: '' });
     onClose();
-    setTab('metrics');
+    setTab('outreach');
   };
 
   const handleClear = () => {
     if (window.confirm('Tem certeza que deseja deletar todos os dados e resetar o Dashboard?')) {
       onClearData();
       onClose();
-      setTab('metrics');
+      setTab('outreach');
     }
   };
-
-  // Helper function to handle empty vs 0 inputs
-  const formatNumber = (val: number) => val === 0 ? '' : val;
 
   return (
     <AnimatePresence>
@@ -99,45 +96,58 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
               </button>
             </div>
 
-            <div className="flex gap-2 mb-6 bg-black/40 p-1 rounded-xl">
-              <button type="button" onClick={() => setTab('metrics')} className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${tab === 'metrics' ? 'bg-[#00A3FF] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>Métricas</button>
-              <button type="button" onClick={() => setTab('leads')} className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${tab === 'leads' ? 'bg-[#00A3FF] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>Adicionar Lead</button>
-              <button type="button" onClick={() => setTab('settings')} className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${tab === 'settings' ? 'bg-[#00A3FF] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>Configurações</button>
+            <div className="flex gap-1 mb-6 bg-black/40 p-1 rounded-xl overflow-x-auto no-scrollbar">
+              <button type="button" onClick={() => setTab('outreach')} className={`flex-1 min-w-[70px] py-1.5 rounded-lg text-[10px] sm:text-xs font-medium transition-colors ${tab === 'outreach' ? 'bg-[#00A3FF] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>Abordagem</button>
+              <button type="button" onClick={() => setTab('financial')} className={`flex-1 min-w-[70px] py-1.5 rounded-lg text-[10px] sm:text-xs font-medium transition-colors ${tab === 'financial' ? 'bg-[#00A3FF] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>Financeiro</button>
+              <button type="button" onClick={() => setTab('leads')} className={`flex-1 min-w-[70px] py-1.5 rounded-lg text-[10px] sm:text-xs font-medium transition-colors ${tab === 'leads' ? 'bg-[#00A3FF] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>Lead</button>
+              <button type="button" onClick={() => setTab('settings')} className={`flex-1 min-w-[70px] py-1.5 rounded-lg text-[10px] sm:text-xs font-medium transition-colors ${tab === 'settings' ? 'bg-[#00A3FF] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>Config.</button>
             </div>
 
-            {tab === 'metrics' && (
+            {tab === 'outreach' && (
               <form className="space-y-5" onSubmit={handleSaveMetrics}>
                 <div className="space-y-3">
-                   <h4 className="text-[10px] uppercase tracking-widest text-gray-500 font-bold border-b border-white/5 pb-1">Métricas de Abordagem</h4>
+                   <h4 className="text-[10px] uppercase tracking-widest text-[#00A3FF] font-bold border-b border-white/5 pb-1">Métricas de Abordagem</h4>
+                   <p className="text-xs text-gray-400 mb-4">Insira o resultado orgânico dos leads frios para o dia de hoje.</p>
                    <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-medium text-gray-400 mb-1">Mensagens Enviadas</label>
-                      <input required type="number" value={formatNumber(metricsForm.messagesSent)} onChange={e => setMetricsForm({...metricsForm, messagesSent: Number(e.target.value)})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" />
+                      <input type="number" value={metricsForm.messagesSent} onChange={e => setMetricsForm({...metricsForm, messagesSent: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: 50" />
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-gray-400 mb-1">Respondidas (Manual)</label>
-                      <input required type="number" value={formatNumber(metricsForm.messagesReplied)} onChange={e => setMetricsForm({...metricsForm, messagesReplied: Number(e.target.value)})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" />
+                      <input type="number" value={metricsForm.messagesReplied} onChange={e => setMetricsForm({...metricsForm, messagesReplied: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: 5" />
                     </div>
                   </div>
                 </div>
                 
+                <div className="pt-4">
+                  <button type="submit" className="w-full btn-primary flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,163,255,0.4)]">
+                    <Save className="w-4 h-4" /> Salvar Dados de Hoje
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {tab === 'financial' && (
+              <form className="space-y-5" onSubmit={handleSaveMetrics}>
                 <div className="space-y-3">
-                  <h4 className="text-[10px] uppercase tracking-widest text-gray-500 font-bold border-b border-white/5 pb-1">Financeiro</h4>
+                  <h4 className="text-[10px] uppercase tracking-widest text-[#00A3FF] font-bold border-b border-white/5 pb-1">Tráfego Pago (Opcional)</h4>
+                  <p className="text-xs text-gray-400 mb-4">Acompanhe se o investimento trará melhores resultados que a abordagem orgânica fria.</p>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-400 mb-1">Tráfego Pago (R$)</label>
-                      <input required type="number" step="0.01" value={formatNumber(metricsForm.adSpend)} onChange={e => setMetricsForm({...metricsForm, adSpend: Number(e.target.value)})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" />
+                      <label className="block text-xs font-medium text-gray-400 mb-1">Investimento (R$)</label>
+                      <input type="number" step="0.01" value={metricsForm.adSpend} onChange={e => setMetricsForm({...metricsForm, adSpend: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: 100" />
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-gray-400 mb-1">Faturamento (R$)</label>
-                      <input required type="number" step="0.01" value={formatNumber(metricsForm.lpRevenue)} onChange={e => setMetricsForm({...metricsForm, lpRevenue: Number(e.target.value)})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" />
+                      <input type="number" step="0.01" value={metricsForm.lpRevenue} onChange={e => setMetricsForm({...metricsForm, lpRevenue: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: 500" />
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-4">
                   <button type="submit" className="w-full btn-primary flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,163,255,0.4)]">
-                    <Save className="w-4 h-4" /> Salvar Dados de Hoje
+                    <Save className="w-4 h-4" /> Salvar Dados Financeiros
                   </button>
                 </div>
               </form>
