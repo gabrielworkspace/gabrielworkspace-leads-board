@@ -69,7 +69,7 @@ export function Projects({ userId }: Props) {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[500px]">
-        <Loader2 className="w-8 h-8 text-[#A3FF12] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#00A3FF] animate-spin" />
       </div>
     );
   }
@@ -81,8 +81,8 @@ export function Projects({ userId }: Props) {
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8B5CF6]/20 to-[#6D28D9]/20 flex items-center justify-center">
-              <Layers className="w-5 h-5 text-[#8B5CF6]" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0055FF]/20 to-[#6D28D9]/20 flex items-center justify-center">
+              <Layers className="w-5 h-5 text-[#0055FF]" />
             </div>
             <h2 className="text-2xl font-bold text-white tracking-wide">Meus Projetos</h2>
           </div>
@@ -91,7 +91,7 @@ export function Projects({ userId }: Props) {
 
         <button 
           onClick={() => setIsAdding(!isAdding)}
-          className="bg-[#8B5CF6] hover:bg-[#7C3AED] text-white px-6 py-3 rounded-xl font-bold transition-colors shadow-[0_0_20px_rgba(139,92,246,0.3)] flex items-center gap-2"
+          className="bg-[#0055FF] hover:bg-[#7C3AED] text-white px-6 py-3 rounded-xl font-bold transition-colors shadow-[0_0_20px_rgba(139,92,246,0.3)] flex items-center gap-2"
         >
           <Plus className="w-4 h-4" /> Novo Projeto
         </button>
@@ -108,9 +108,9 @@ export function Projects({ userId }: Props) {
               placeholder="Ex: Refazer Site Principal"
               value={newProjectName}
               onChange={(e) => setNewProjectName(e.target.value)}
-              className="flex-1 bg-[#111318] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#8B5CF6] transition-colors"
+              className="flex-1 bg-[#111318] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#0055FF] transition-colors"
             />
-            <button type="submit" className="bg-[#8B5CF6] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#7C3AED] transition-colors">
+            <button type="submit" className="bg-[#0055FF] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#7C3AED] transition-colors">
               Criar
             </button>
           </div>
@@ -123,8 +123,8 @@ export function Projects({ userId }: Props) {
           const columnProjects = projects.filter(p => p.status === status);
           
           let headerColor = "text-gray-400 border-gray-400/20";
-          if (status === 'Em Andamento') headerColor = "text-[#A3FF12] border-[#A3FF12]/20";
-          if (status === 'Concluído') headerColor = "text-[#10B981] border-[#10B981]/20";
+          if (status === 'Em Andamento') headerColor = "text-[#00A3FF] border-[#00A3FF]/20";
+          if (status === 'Concluído') headerColor = "text-[#00A3FF] border-[#00A3FF]/20";
 
           return (
             <div key={status} className="bg-[#0A0A0A] rounded-3xl border border-white/5 p-4 flex flex-col gap-4">
@@ -141,7 +141,7 @@ export function Projects({ userId }: Props) {
                 )}
                 
                 {columnProjects.map(project => (
-                  <div key={project.id} className="bg-[#111318] border border-white/10 p-4 rounded-2xl group hover:border-[#8B5CF6]/50 transition-colors">
+                  <div key={project.id} className="bg-[#111318] border border-white/10 p-4 rounded-2xl group hover:border-[#0055FF]/50 transition-colors">
                     <div className="flex justify-between items-start mb-4">
                       <h4 className="font-bold text-gray-200 leading-tight pr-4">{project.name}</h4>
                       <button 
@@ -157,7 +157,7 @@ export function Projects({ userId }: Props) {
                       <select 
                         value={project.status}
                         onChange={(e) => updateStatus(project.id, e.target.value)}
-                        className="bg-black/50 border border-white/5 text-xs text-gray-300 rounded-lg px-2 py-1 outline-none focus:border-[#8B5CF6] cursor-pointer"
+                        className="bg-black/50 border border-white/5 text-xs text-gray-300 rounded-lg px-2 py-1 outline-none focus:border-[#0055FF] cursor-pointer"
                       >
                         {STATUSES.map(s => (
                           <option key={s} value={s}>{s}</option>

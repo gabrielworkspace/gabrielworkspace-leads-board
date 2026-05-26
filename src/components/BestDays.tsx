@@ -69,7 +69,7 @@ export function BestDays() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[500px]">
-        <Loader2 className="w-8 h-8 text-[#A3FF12] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#00A3FF] animate-spin" />
       </div>
     );
   }
@@ -106,14 +106,14 @@ export function BestDays() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* Record: Faturamento */}
-        <div className="holo-panel p-6 border-t-4 border-t-[#10B981] flex flex-col items-center text-center group hover:-translate-y-2 transition-transform duration-300">
-          <div className="w-16 h-16 rounded-full bg-[#10B981]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <DollarSign className="w-8 h-8 text-[#10B981]" />
+        <div className="holo-panel p-6 border-t-4 border-t-[#00A3FF] flex flex-col items-center text-center group hover:-translate-y-2 transition-transform duration-300">
+          <div className="w-16 h-16 rounded-full bg-[#00A3FF]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+            <DollarSign className="w-8 h-8 text-[#00A3FF]" />
           </div>
           <h3 className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Maior Faturamento</h3>
           <p className="text-3xl font-black text-white mb-4">{formatCurrency(records.revenue?.lpRevenue)}</p>
           <div className="bg-[#111318] w-full p-3 rounded-xl border border-white/5 flex items-center justify-center gap-2">
-            <Award className="w-4 h-4 text-[#10B981]" />
+            <Award className="w-4 h-4 text-[#00A3FF]" />
             <span className="text-sm font-medium text-gray-300">{formatDate(records.revenue?.date)}</span>
           </div>
         </div>
@@ -132,14 +132,14 @@ export function BestDays() {
         </div>
 
         {/* Record: Respostas */}
-        <div className="holo-panel p-6 border-t-4 border-t-[#8B5CF6] flex flex-col items-center text-center group hover:-translate-y-2 transition-transform duration-300">
-          <div className="w-16 h-16 rounded-full bg-[#8B5CF6]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <MessageCircle className="w-8 h-8 text-[#8B5CF6]" />
+        <div className="holo-panel p-6 border-t-4 border-t-[#0055FF] flex flex-col items-center text-center group hover:-translate-y-2 transition-transform duration-300">
+          <div className="w-16 h-16 rounded-full bg-[#0055FF]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+            <MessageCircle className="w-8 h-8 text-[#0055FF]" />
           </div>
           <h3 className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Maior Engajamento</h3>
           <p className="text-3xl font-black text-white mb-4">{records.replies?.messagesReplied || 0} <span className="text-lg font-medium text-gray-500">respostas</span></p>
           <div className="bg-[#111318] w-full p-3 rounded-xl border border-white/5 flex items-center justify-center gap-2">
-            <Award className="w-4 h-4 text-[#8B5CF6]" />
+            <Award className="w-4 h-4 text-[#0055FF]" />
             <span className="text-sm font-medium text-gray-300">{formatDate(records.replies?.date)}</span>
           </div>
         </div>
@@ -147,8 +147,8 @@ export function BestDays() {
       </div>
 
       {/* Dica */}
-      <div className="mt-8 bg-gradient-to-r from-[#A3FF12]/10 to-transparent border-l-4 border-[#A3FF12] p-6 rounded-r-2xl flex items-start gap-4">
-        <TrendingUp className="w-6 h-6 text-[#A3FF12] shrink-0 mt-1" />
+      <div className="mt-8 bg-gradient-to-r from-[#00A3FF]/10 to-transparent border-l-4 border-[#00A3FF] p-6 rounded-r-2xl flex items-start gap-4">
+        <TrendingUp className="w-6 h-6 text-[#00A3FF] shrink-0 mt-1" />
         <div>
           <h4 className="text-white font-bold mb-1">Como usar essa tela?</h4>
           <p className="text-gray-400 text-sm leading-relaxed">

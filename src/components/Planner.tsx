@@ -125,7 +125,7 @@ export function Planner({ userId }: Props) {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[500px]">
-        <Loader2 className="w-8 h-8 text-[#A3FF12] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#00A3FF] animate-spin" />
       </div>
     );
   }
@@ -160,8 +160,8 @@ export function Planner({ userId }: Props) {
       <div className="flex items-center justify-between gap-4 flex-wrap mb-2">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#A3FF12]/20 to-[#8BE600]/20 flex items-center justify-center">
-              <CalendarIcon className="w-5 h-5 text-[#A3FF12]" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00A3FF]/20 to-[#0055FF]/20 flex items-center justify-center">
+              <CalendarIcon className="w-5 h-5 text-[#00A3FF]" />
             </div>
             <h2 className="text-2xl font-bold text-white tracking-wide">Planejamento</h2>
           </div>
@@ -204,27 +204,27 @@ export function Planner({ userId }: Props) {
               <div 
                 key={day.toISOString()}
                 onClick={() => setSelectedDate(dateStr)}
-                className={`bg-[#111318] min-h-[100px] p-2 flex flex-col cursor-pointer transition-all hover:bg-white/5 group border-t border-white/5 relative overflow-hidden ${isCurrentMonth ? '' : 'opacity-40'} ${isToday ? 'bg-[#A3FF12]/5' : ''}`}
+                className={`bg-[#111318] min-h-[100px] p-2 flex flex-col cursor-pointer transition-all hover:bg-white/5 group border-t border-white/5 relative overflow-hidden ${isCurrentMonth ? '' : 'opacity-40'} ${isToday ? 'bg-[#00A3FF]/5' : ''}`}
               >
                 {dayData?.success && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#A3FF12]/10 to-transparent pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#00A3FF]/10 to-transparent pointer-events-none"></div>
                 )}
                 
                 <div className="flex items-center justify-between mb-2 relative z-10">
                   <span className={clsx(
                     "w-6 h-6 flex items-center justify-center rounded-full text-sm font-medium transition-colors",
-                    isToday ? "bg-[#A3FF12] text-white shadow-[0_0_10px_rgba(0,163,255,0.4)]" : "text-gray-300 group-hover:text-white"
+                    isToday ? "bg-[#00A3FF] text-white shadow-[0_0_10px_rgba(0,163,255,0.4)]" : "text-gray-300 group-hover:text-white"
                   )}>
                     {format(day, 'd')}
                   </span>
                   
                   <div className="flex items-center gap-1">
                     {dayData?.notes && <MessageSquare className="w-3 h-3 text-gray-500" />}
-                    {dayData?.success && <CheckCircle2 className="w-4 h-4 text-[#A3FF12] drop-shadow-[0_0_5px_rgba(0,163,255,0.8)]" />}
+                    {dayData?.success && <CheckCircle2 className="w-4 h-4 text-[#00A3FF] drop-shadow-[0_0_5px_rgba(0,163,255,0.8)]" />}
                     {!dayData?.success && dayEvents.length > 0 && (
                       <span className="flex h-2 w-2 relative ml-1">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#A3FF12] opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#A3FF12]"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A3FF] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00A3FF]"></span>
                       </span>
                     )}
                   </div>
@@ -256,7 +256,7 @@ export function Planner({ userId }: Props) {
             <div className="p-6 border-b border-white/5 flex items-center justify-between bg-black/20 relative overflow-hidden">
               <div className={clsx(
                 "absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 transition-opacity duration-500",
-                daySuccess ? "bg-[#A3FF12] opacity-20" : "opacity-0"
+                daySuccess ? "bg-[#00A3FF] opacity-20" : "opacity-0"
               )}></div>
               
               <div className="relative z-10">
@@ -274,7 +274,7 @@ export function Planner({ userId }: Props) {
                   className={clsx(
                     "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 border",
                     daySuccess 
-                      ? "bg-[#A3FF12]/10 text-[#A3FF12] border-[#A3FF12]/30 shadow-[0_0_15px_rgba(0,163,255,0.2)]" 
+                      ? "bg-[#00A3FF]/10 text-[#00A3FF] border-[#00A3FF]/30 shadow-[0_0_15px_rgba(0,163,255,0.2)]" 
                       : "bg-white/5 text-gray-400 border-white/5 hover:bg-white/10 hover:text-white"
                   )}
                 >
@@ -301,7 +301,7 @@ export function Planner({ userId }: Props) {
                       (groupedEvents[selectedDate] || []).map(event => (
                         <div key={event.id} className="group flex items-center justify-between p-3 bg-white/5 border border-white/5 rounded-xl hover:border-white/10 transition-colors">
                           <div className="flex items-center gap-3">
-                            <span className="w-1.5 h-1.5 bg-[#A3FF12] rounded-full shadow-[0_0_5px_#A3FF12]"></span>
+                            <span className="w-1.5 h-1.5 bg-[#00A3FF] rounded-full shadow-[0_0_5px_#00A3FF]"></span>
                             <span className="text-gray-200 text-sm font-medium">{event.title}</span>
                           </div>
                           <button 
@@ -323,9 +323,9 @@ export function Planner({ userId }: Props) {
                     placeholder="Adicionar novo foco..."
                     value={newEventTitle}
                     onChange={(e) => setNewEventTitle(e.target.value)}
-                    className="flex-1 bg-[#151210] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#A3FF12] transition-colors text-sm"
+                    className="flex-1 bg-[#151210] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm"
                   />
-                  <button type="submit" className="bg-[#A3FF12] text-white p-2.5 rounded-xl hover:bg-[#C6F432] transition-colors flex items-center justify-center">
+                  <button type="submit" className="bg-[#00A3FF] text-white p-2.5 rounded-xl hover:bg-[#008AE6] transition-colors flex items-center justify-center">
                     <Plus className="w-5 h-5" />
                   </button>
                 </form>
@@ -333,7 +333,7 @@ export function Planner({ userId }: Props) {
 
               {/* Notes */}
               <div>
-                <label className="text-[10px] uppercase tracking-widest font-bold text-[#A3FF12] mb-3 flex items-center gap-2">
+                <label className="text-[10px] uppercase tracking-widest font-bold text-[#00A3FF] mb-3 flex items-center gap-2">
                   <MessageSquare className="w-3 h-3" /> Observações do Resultado
                 </label>
                 <textarea
@@ -341,7 +341,7 @@ export function Planner({ userId }: Props) {
                   value={dayNotes}
                   onChange={(e) => setDayNotes(e.target.value)}
                   onBlur={handleNotesBlur}
-                  className="w-full bg-[#151210] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#A3FF12] transition-colors text-sm min-h-[120px] resize-y placeholder:text-gray-600"
+                  className="w-full bg-[#151210] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm min-h-[120px] resize-y placeholder:text-gray-600"
                 ></textarea>
               </div>
 
