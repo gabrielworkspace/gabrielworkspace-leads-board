@@ -31,7 +31,11 @@ interface Task {
   created_at: string;
 }
 
-export function DailyTasks() {
+interface DailyTasksProps {
+  dateFilter?: string;
+}
+
+export function DailyTasks({ dateFilter = '1' }: DailyTasksProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -58,9 +62,19 @@ export function DailyTasks() {
     e.preventDefault();
     if (!newTaskTitle.trim()) return;
 
+    const targetDate = new Date();
+    if (dateFilter === 'yesterday') {
+      targetDate.setDate(targetDate.getDate() - 1);
+    }
+
+    const insertData: any = { title: newTaskTitle.trim() };
+    if (dateFilter === 'yesterday') {
+      insertData.created_at = targetDate.toISOString();
+    }
+
     const { data } = await supabase
       .from('tasks')
-      .insert([{ title: newTaskTitle.trim() }])
+      .insert([insertData])
       .select()
       .single();
 
@@ -88,19 +102,26 @@ export function DailyTasks() {
   }
 
   // --- Data Processing ---
-  const now = new Date();
+  const targetDate = useMemo(() => {
+    const d = new Date();
+    if (dateFilter === 'yesterday') {
+      d.setDate(d.getDate() - 1);
+    }
+    return d;
+  }, [dateFilter]);
   
-  // Today's tasks
+  // Today's tasks (or selected date tasks)
   const todayTasks = useMemo(() => {
     return tasks.filter(t => {
       const createdDate = new Date(t.created_at);
-      return isSameDay(createdDate, now) || !t.completed;
+      // Show if it was created on the target date OR if it's uncompleted (carries over)
+      return isSameDay(createdDate, targetDate) || !t.completed;
     });
-  }, [tasks, now]);
+  }, [tasks, targetDate]);
 
   // History Tasks
   const historyData = useMemo(() => {
-    const cutoffDate = subDays(now, historyPeriod);
+    const cutoffDate = subDays(new Date(), historyPeriod);
     const filtered = tasks.filter(t => new Date(t.created_at) >= cutoffDate);
     
     const grouped = filtered.reduce((acc, task) => {
@@ -185,9 +206,11 @@ export function DailyTasks() {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00A3FF]/20 to-[#0055FF]/20 flex items-center justify-center">
                 <CheckSquare className="w-5 h-5 text-[#00A3FF]" />
               </div>
-              <h2 className="text-2xl font-bold text-white tracking-wide">Tarefas Diárias</h2>
-            </div>
-            <p className="text-gray-400 text-sm ml-13">Organize seu foco e acompanhe seu desempenho.</p>
+            <h2 className="text-2xl font-bold text-white tracking-wide">
+              {dateFilter === 'yesterday' ? 'Tarefas de Ontem' : 'Tarefas Diárias'}
+            </h2>
+          </div>
+          <p className="text-gray-400 text-sm ml-13">Organize seu foco e acompanhe seu desempenho.</p>
           </div>
 
           {activeTab === 'today' && (
@@ -212,7 +235,7 @@ export function DailyTasks() {
             onClick={() => setActiveTab('today')}
             className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === 'today' ? 'bg-[#00A3FF] text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
           >
-            <ListTodo size={16} /> Tarefas de Hoje
+            <ListTodo size={16} /> {dateFilter === 'yesterday' ? 'Lista de Ontem' : 'Tarefas de Hoje'}
           </button>
           <button 
             onClick={() => setActiveTab('history')}
@@ -234,7 +257,7 @@ export function DailyTasks() {
                 type="text"
                 value={newTaskTitle}
                 onChange={(e) => setNewTaskTitle(e.target.value)}
-                placeholder="Qual é a sua próxima missão de hoje?"
+                placeholder={dateFilter === 'yesterday' ? 'Qual era a sua missão para ontem?' : 'Qual é a sua próxima missão de hoje?'}
                 className="flex-1 bg-transparent border-none text-white px-4 py-3 outline-none placeholder:text-gray-600 font-medium"
               />
               <button 
@@ -252,7 +275,7 @@ export function DailyTasks() {
             {todayTasks.length === 0 ? (
               <div className="text-center py-16 border border-white/5 rounded-3xl bg-[#0A0A0A]">
                 <CheckSquare className="w-12 h-12 text-gray-700 mx-auto mb-4" />
-                <p className="text-gray-500 font-medium">Nenhuma tarefa para hoje. Tire o dia para descansar ou adicione uma nova!</p>
+                <p className="text-gray-500 font-medium">Nenhuma tarefa para este dia.</p>
               </div>
             ) : (
               todayTasks.map(task => (
