@@ -2,15 +2,17 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { CheckSquare, Circle, CheckCircle2, Trash2, Plus, Loader2, BarChart2, Calendar, ListTodo } from 'lucide-react';
 import { clsx } from 'clsx';
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 } from 'chart.js';
 import { format, parseISO, isSameDay, subDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -18,10 +20,12 @@ import { ptBR } from 'date-fns/locale';
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
 
 interface Task {
@@ -42,7 +46,7 @@ export function DailyTasks({ dateFilter = '1' }: DailyTasksProps) {
   
   // Navigation State
   const [activeTab, setActiveTab] = useState<'today' | 'history'>('today');
-  const [historyPeriod, setHistoryPeriod] = useState<7 | 30>(7);
+  const [historyPeriod, setHistoryPeriod] = useState<7 | 15 | 30 | 'all'>(7);
 
   useEffect(() => {
     loadTasks();
@@ -130,8 +134,11 @@ export function DailyTasks({ dateFilter = '1' }: DailyTasksProps) {
 
   // History Tasks
   const historyData = useMemo(() => {
-    const cutoffDate = subDays(new Date(), historyPeriod);
-    const filtered = tasks.filter(t => new Date(t.created_at) >= cutoffDate);
+    let filtered = tasks;
+    if (historyPeriod !== 'all') {
+      const cutoffDate = subDays(new Date(), historyPeriod);
+      filtered = tasks.filter(t => new Date(t.created_at) >= cutoffDate);
+    }
     
     const grouped = filtered.reduce((acc, task) => {
       const dateStr = format(new Date(task.created_at), 'yyyy-MM-dd');
@@ -158,14 +165,30 @@ export function DailyTasks({ dateFilter = '1' }: DailyTasksProps) {
       {
         label: 'Criadas',
         data: historyData.sortedDates.map(d => historyData.grouped[d].total),
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        borderRadius: 4,
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#111318',
+        pointBorderColor: 'rgba(255, 255, 255, 0.5)',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
       },
       {
         label: 'Concluídas',
         data: historyData.sortedDates.map(d => historyData.grouped[d].completed),
-        backgroundColor: '#00A3FF',
-        borderRadius: 4,
+        borderColor: '#00A3FF',
+        backgroundColor: 'rgba(0, 163, 255, 0.1)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#111318',
+        pointBorderColor: '#00A3FF',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
       }
     ]
   };
@@ -173,20 +196,40 @@ export function DailyTasks({ dateFilter = '1' }: DailyTasksProps) {
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      mode: 'index' as const,
+      intersect: false,
+    },
     plugins: {
       legend: {
-        labels: { color: '#9CA3AF' }
+        labels: { 
+          color: '#9CA3AF',
+          usePointStyle: true,
+          boxWidth: 8
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(17, 19, 24, 0.9)',
+        titleColor: '#fff',
+        bodyColor: '#cbd5e1',
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        padding: 12,
+        displayColors: true,
+        usePointStyle: true,
       }
     },
     scales: {
       y: {
         beginAtZero: true,
-        ticks: { color: '#9CA3AF', stepSize: 1 },
-        grid: { color: 'rgba(255,255,255,0.05)' }
+        ticks: { color: '#6B7280', stepSize: 1 },
+        grid: { color: 'rgba(255,255,255,0.03)' },
+        border: { display: false }
       },
       x: {
-        ticks: { color: '#9CA3AF' },
-        grid: { display: false }
+        ticks: { color: '#6B7280', maxRotation: 45, minRotation: 45 },
+        grid: { display: false },
+        border: { display: false }
       }
     }
   };
@@ -329,29 +372,44 @@ export function DailyTasks({ dateFilter = '1' }: DailyTasksProps) {
       {activeTab === 'history' && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
           
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               <BarChart2 className="w-5 h-5 text-[#00A3FF]" /> Desempenho
             </h3>
-            <div className="flex bg-[#121212] rounded-lg border border-white/5 p-1">
+            <div className="flex bg-[#121212] rounded-lg border border-white/5 p-1 overflow-x-auto no-scrollbar">
               <button 
                 onClick={() => setHistoryPeriod(7)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${historyPeriod === 7 ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white'}`}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${historyPeriod === 7 ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white'}`}
               >
                 7 Dias
               </button>
               <button 
+                onClick={() => setHistoryPeriod(15)}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${historyPeriod === 15 ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white'}`}
+              >
+                15 Dias
+              </button>
+              <button 
                 onClick={() => setHistoryPeriod(30)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${historyPeriod === 30 ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white'}`}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${historyPeriod === 30 ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white'}`}
               >
                 30 Dias
+              </button>
+              <button 
+                onClick={() => setHistoryPeriod('all')}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${historyPeriod === 'all' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white'}`}
+              >
+                Todo o Período
               </button>
             </div>
           </div>
 
-          <div className="bg-[#111318] border border-white/5 rounded-2xl p-6 h-[300px]">
+          <div className="bg-[#111318] border border-white/5 rounded-2xl p-6 h-[320px] relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#00A3FF] opacity-[0.02] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:opacity-[0.04] transition-opacity duration-700 pointer-events-none"></div>
             {historyData.sortedDates.length > 0 ? (
-              <Bar data={chartData} options={chartOptions} />
+              <div className="relative z-10 w-full h-full">
+                <Line data={chartData} options={chartOptions} />
+              </div>
             ) : (
               <div className="h-full flex items-center justify-center text-gray-500 text-sm">
                 Nenhum dado encontrado no período.

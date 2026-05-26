@@ -79,7 +79,7 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
       name: leadForm.name,
       status: leadForm.status,
       value: leadForm.value ? Number(leadForm.value) : undefined,
-      promiseDate: leadForm.status === 'Promised' ? leadForm.promiseDate : undefined,
+      promiseDate: leadForm.status === 'Promised' && leadForm.promiseDate ? leadForm.promiseDate : undefined,
       observations: leadForm.observations,
     };
 
@@ -193,7 +193,7 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
                   <select value={leadForm.status} onChange={e => setLeadForm({...leadForm, status: e.target.value as LeadStatus})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm appearance-none">
                     <option value="Replied">Respondeu</option>
                     <option value="Closed">Fechou</option>
-                    <option value="Promised">Prometeu Responder</option>
+                    <option value="Promised">Prometeu dar uma resposta</option>
                     <option value="Ignored">Ignorado</option>
                   </select>
                 </div>
@@ -201,7 +201,7 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
                 {leadForm.status === 'Promised' && (
                   <div>
                     <label className="block text-xs font-medium text-gray-400 mb-1">Data de Retorno</label>
-                    <input required type="date" value={leadForm.promiseDate} onChange={e => setLeadForm({...leadForm, promiseDate: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" />
+                    <input type="date" value={leadForm.promiseDate} onChange={e => setLeadForm({...leadForm, promiseDate: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" />
                   </div>
                 )}
 

@@ -13,6 +13,7 @@ import { DailyTasks } from './components/DailyTasks';
 import { BestDays } from './components/BestDays';
 import { Planner } from './components/Planner';
 import { Projects } from './components/Projects';
+import { DumpComparison } from './components/DumpComparison';
 import { Plus } from 'lucide-react';
 import { useDashboardData } from './hooks/useDashboardData';
 import type { Lead } from './types';
@@ -139,7 +140,7 @@ function App() {
         )}
 
         <main className="flex-1 h-screen overflow-y-auto p-4 lg:p-10 flex flex-col relative z-10 no-scrollbar w-full">
-          <TopBar dateFilter={dateFilter} setDateFilter={setDateFilter} onOpenSidebar={() => setIsMobileMenuOpen(true)} onOpenReport={() => setIsReportModalOpen(true)} />
+          <TopBar dateFilter={dateFilter} setDateFilter={setDateFilter} onOpenSidebar={() => setIsMobileMenuOpen(true)} onOpenReport={() => setIsReportModalOpen(true)} activeView={activeView} />
           
           {activeView === 'Visão Geral' ? (
             <div className="flex flex-col gap-6 pb-20 w-full">
@@ -170,6 +171,8 @@ function App() {
             <Planner userId={currentUserId} />
           ) : activeView === 'Projetos' ? (
             <Projects />
+          ) : activeView === 'Comparação Dump' ? (
+            <DumpComparison />
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center holo-panel p-10 min-h-[500px]">
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#00A3FF]/20 to-[#0055FF]/20 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,163,255,0.1)]">

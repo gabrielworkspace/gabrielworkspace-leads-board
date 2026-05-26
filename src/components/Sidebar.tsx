@@ -1,4 +1,4 @@
-import { LayoutDashboard, Clock, CheckSquare, Layers, Trophy, Calendar, LogOut } from 'lucide-react';
+import { LayoutDashboard, Clock, CheckSquare, Layers, Trophy, Calendar, LogOut, Users } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface Props {
@@ -16,6 +16,7 @@ export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) 
     { icon: <Layers size={18} />, label: 'Projetos' },
     { icon: <Trophy size={18} />, label: 'Melhores Dias' },
     { icon: <Calendar size={18} />, label: 'Planejamento' },
+    { icon: <Users size={18} />, label: 'Comparação Dump' },
   ];
 
   return (
