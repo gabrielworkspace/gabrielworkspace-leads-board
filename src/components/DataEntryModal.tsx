@@ -92,9 +92,6 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
     onClose();
     setTab('outreach');
   };
-    onClose();
-    setTab('outreach');
-  };
 
   const handleClear = () => {
     if (window.confirm('Tem certeza que deseja deletar todos os dados e resetar o Dashboard?')) {
