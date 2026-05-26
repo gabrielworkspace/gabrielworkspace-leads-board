@@ -45,20 +45,20 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInitialTab, setModalInitialTab] = useState<'outreach' | 'financial' | 'leads' | 'settings'>('outreach');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { metrics, leads, updateTodayMetrics, addLead, removeLead, clearData, loading } = useDashboardData();
-  
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('@NexusBoard:auth') === 'true';
+  const [currentUserId, setCurrentUserId] = useState<string | null>(() => {
+    return localStorage.getItem('@NexusBoard:userId');
   });
 
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-    localStorage.setItem('@NexusBoard:auth', 'true');
+  const { metrics, leads, updateTodayMetrics, addLead, removeLead, clearData, loading } = useDashboardData(currentUserId);
+
+  const handleLogin = (userId: string) => {
+    setCurrentUserId(userId);
+    localStorage.setItem('@NexusBoard:userId', userId);
   };
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('@NexusBoard:auth');
+    setCurrentUserId(null);
+    localStorage.removeItem('@NexusBoard:userId');
   };
 
   const openModal = (tab: 'outreach' | 'financial' | 'leads' | 'settings' = 'outreach') => {
@@ -72,7 +72,7 @@ function App() {
     return metrics.slice(-days);
   }, [metrics, dateFilter]);
 
-  if (!isAuthenticated) {
+  if (!currentUserId) {
     return <Login onLogin={handleLogin} />;
   }
 
@@ -126,7 +126,7 @@ function App() {
           ) : activeView === 'Melhores Dias' ? (
             <BestDays />
           ) : activeView === 'Planejamento' ? (
-            <Planner />
+            <Planner userId={currentUserId} />
           ) : activeView === 'Projetos' ? (
             <Projects />
           ) : (

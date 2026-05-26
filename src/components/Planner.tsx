@@ -10,7 +10,11 @@ interface PlannerEvent {
   date: string;
 }
 
-export function Planner() {
+interface Props {
+  userId: string | null;
+}
+
+export function Planner({ userId }: Props) {
   const [events, setEvents] = useState<PlannerEvent[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -23,12 +27,14 @@ export function Planner() {
 
   useEffect(() => {
     loadEvents();
-  }, []);
+  }, [userId]);
 
   async function loadEvents() {
+    if (!userId) return;
     const { data } = await supabase
       .from('planner_events')
       .select('*')
+      .eq('user_id', userId)
       .order('date', { ascending: true });
     
     if (data) setEvents(data);
@@ -37,11 +43,11 @@ export function Planner() {
 
   async function addEvent(e: React.FormEvent) {
     e.preventDefault();
-    if (!newEventTitle.trim() || !selectedDate) return;
+    if (!newEventTitle.trim() || !selectedDate || !userId) return;
 
     const { data } = await supabase
       .from('planner_events')
-      .insert([{ title: newEventTitle.trim(), date: selectedDate }])
+      .insert([{ user_id: userId, title: newEventTitle.trim(), date: selectedDate }])
       .select()
       .single();
 
@@ -52,6 +58,7 @@ export function Planner() {
   }
 
   async function deleteEvent(id: string) {
+    if (!userId) return;
     setEvents(events.filter(e => e.id !== id));
     await supabase.from('planner_events').delete().eq('id', id);
   }

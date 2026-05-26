@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Lock } from 'lucide-react';
 
 interface Props {
-  onLogin: () => void;
+  onLogin: (userId: string) => void;
 }
 
 export function Login({ onLogin }: Props) {
@@ -12,8 +12,11 @@ export function Login({ onLogin }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === 'gabriel.workspace' && password === '12345678') {
-      onLogin();
+    const user = username.toLowerCase().trim();
+    if ((user === 'gabriel.workspace' || user === 'gabriel') && password === '12345678') {
+      onLogin('gabriel');
+    } else if (user === 'clarice' && password === '12345678') {
+      onLogin('clarice');
     } else {
       setError(true);
     }

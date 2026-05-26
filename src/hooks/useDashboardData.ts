@@ -2,14 +2,16 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import type { DailyMetrics, Lead } from '../types';
 
-export function useDashboardData() {
+export function useDashboardData(userId: string | null) {
   const [metrics, setMetrics] = useState<DailyMetrics[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
-      const { data: leadsData } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
+      if (!userId) return;
+      
+      const { data: leadsData } = await supabase.from('leads').select('*').eq('user_id', userId).order('created_at', { ascending: false });
       if (leadsData) {
         // Map promisedate to promiseDate
         setLeads(leadsData.map(l => ({
@@ -23,6 +25,7 @@ export function useDashboardData() {
       const { data: metricsData } = await supabase
         .from('daily_metrics')
         .select('*')
+        .eq('user_id', userId)
         .gte('date', thirtyDaysAgo.toISOString().split('T')[0])
         .order('date', { ascending: true });
 
@@ -58,11 +61,12 @@ export function useDashboardData() {
     }
     
     loadData();
-  }, []);
+  }, [userId]);
 
   const updateTodayMetrics = async (newMetrics: Partial<DailyMetrics>, isIncremental = false) => {
+    if (!userId) return;
     const today = new Date().toISOString().split('T')[0];
-    const { data: existing } = await supabase.from('daily_metrics').select('*').eq('date', today).maybeSingle();
+    const { data: existing } = await supabase.from('daily_metrics').select('*').eq('user_id', userId).eq('date', today).maybeSingle();
     
     const dbPayload: any = {};
     if (isIncremental) {
@@ -80,7 +84,7 @@ export function useDashboardData() {
     if (existing) {
       await supabase.from('daily_metrics').update(dbPayload).eq('id', existing.id);
     } else {
-      await supabase.from('daily_metrics').insert([{ date: today, ...dbPayload }]);
+      await supabase.from('daily_metrics').insert([{ user_id: userId, date: today, ...dbPayload }]);
     }
 
     setMetrics(prev => {
@@ -100,7 +104,9 @@ export function useDashboardData() {
   };
 
   const addLead = async (leadData: Omit<Lead, 'id'>) => {
+    if (!userId) return;
     const dbPayload = {
+      user_id: userId,
       name: leadData.name,
       status: leadData.status,
       value: leadData.value,
@@ -113,13 +119,15 @@ export function useDashboardData() {
   };
 
   const removeLead = async (id: string) => {
+    if (!userId) return;
     await supabase.from('leads').delete().eq('id', id);
     setLeads(prev => prev.filter(l => l.id !== id));
   };
 
   const clearData = async () => {
-    await supabase.from('leads').delete().not('id', 'is', null);
-    await supabase.from('daily_metrics').delete().not('id', 'is', null);
+    if (!userId) return;
+    await supabase.from('leads').delete().eq('user_id', userId);
+    await supabase.from('daily_metrics').delete().eq('user_id', userId);
     
     setLeads([]);
     const paddedMetrics: DailyMetrics[] = [];
