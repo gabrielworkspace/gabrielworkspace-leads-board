@@ -32,6 +32,7 @@ interface LeadDisplay {
   value: number;
   user_id: string;
   date: string;
+  serviceType?: string;
 }
 
 export function DumpComparison() {
@@ -58,7 +59,7 @@ export function DumpComparison() {
 
       const { data: leadsData } = await supabase
         .from('leads')
-        .select('id, user_id, name, status, value, created_at')
+        .select('id, user_id, name, status, value, created_at, service_type')
         .in('user_id', ['gabriel', 'matheus']);
 
       const result: ComparisonData = {
@@ -109,7 +110,8 @@ export function DumpComparison() {
                 name: l.name,
                 value: l.value,
                 user_id: user,
-                date: l.created_at
+                date: l.created_at,
+                serviceType: l.service_type
               });
 
               // Add organic revenue to the specific date on timeline
@@ -404,6 +406,7 @@ export function DumpComparison() {
               <thead>
                 <tr className="text-xs text-gray-500 border-b border-white/5">
                   <th className="pb-3 font-medium">Nome do Lead</th>
+                  <th className="pb-3 font-medium">Serviço</th>
                   <th className="pb-3 font-medium">Resp.</th>
                   <th className="pb-3 font-medium text-right">Valor</th>
                 </tr>
@@ -414,6 +417,9 @@ export function DumpComparison() {
                     <td className="py-3 text-sm text-white flex items-center gap-2">
                       <span className="text-gray-600 text-xs w-4">{idx + 1}.</span>
                       <span className="truncate max-w-[120px] sm:max-w-[180px]">{lead.name}</span>
+                    </td>
+                    <td className="py-3 text-xs text-gray-400">
+                      {lead.serviceType || '--'}
                     </td>
                     <td className="py-3 text-xs">
                       <span className={`px-2 py-0.5 rounded-full ${lead.user_id === 'gabriel' ? 'bg-[#FF5500]/20 text-[#FF5500]' : 'bg-[#FF8A00]/20 text-[#FF8A00]'}`}>
@@ -427,7 +433,7 @@ export function DumpComparison() {
                 ))}
                 {topLeads.length === 0 && (
                   <tr>
-                    <td colSpan={3} className="py-8 text-center text-gray-500 text-sm">
+                    <td colSpan={4} className="py-8 text-center text-gray-500 text-sm">
                       Nenhum lead fechado no momento.
                     </td>
                   </tr>

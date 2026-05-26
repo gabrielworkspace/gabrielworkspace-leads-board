@@ -13,10 +13,11 @@ export function useDashboardData(userId: string | null) {
       
       const { data: leadsData } = await supabase.from('leads').select('*').eq('user_id', userId).order('created_at', { ascending: false });
       if (leadsData) {
-        // Map promisedate to promiseDate
+        // Map promisedate to promiseDate and service_type to serviceType
         setLeads(leadsData.map(l => ({
           ...l,
-          promiseDate: l.promisedate
+          promiseDate: l.promisedate,
+          serviceType: l.service_type
         })));
       }
 
@@ -110,11 +111,12 @@ export function useDashboardData(userId: string | null) {
       name: leadData.name,
       status: leadData.status,
       value: leadData.value,
-      promisedate: leadData.promiseDate
+      promisedate: leadData.promiseDate,
+      service_type: leadData.serviceType
     };
     const { data } = await supabase.from('leads').insert([dbPayload]).select().single();
     if (data) {
-      setLeads(prev => [{ ...data, promiseDate: data.promisedate }, ...prev]);
+      setLeads(prev => [{ ...data, promiseDate: data.promisedate, serviceType: data.service_type }, ...prev]);
     }
   };
 
@@ -125,10 +127,11 @@ export function useDashboardData(userId: string | null) {
     if (leadData.status !== undefined) dbPayload.status = leadData.status;
     if (leadData.value !== undefined) dbPayload.value = leadData.value;
     if (leadData.promiseDate !== undefined) dbPayload.promisedate = leadData.promiseDate;
+    if (leadData.serviceType !== undefined) dbPayload.service_type = leadData.serviceType;
 
     const { data } = await supabase.from('leads').update(dbPayload).eq('id', id).eq('user_id', userId).select().single();
     if (data) {
-      setLeads(prev => prev.map(l => l.id === id ? { ...data, promiseDate: data.promisedate } : l));
+      setLeads(prev => prev.map(l => l.id === id ? { ...data, promiseDate: data.promisedate, serviceType: data.service_type } : l));
     }
   };
 
