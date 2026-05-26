@@ -3,8 +3,10 @@ import { Activity, ArrowUpRight } from 'lucide-react';
 import type { DailyMetrics, Lead } from '../types';
 
 export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], leads: Lead[] }) {
-  const latest = metrics[metrics.length - 1] || { messagesSent: 0 };
-  const totalSent = latest.messagesSent;
+  const latest = metrics[metrics.length - 1] || { messagesSent: 0, messagesReplied: 0 };
+  const totalSent = latest.messagesSent || 0;
+  const totalReplies = latest.messagesReplied || 0;
+  
   const closedLeads = leads.filter(l => l.status === 'Closed').length;
   const repliedLeads = leads.filter(l => l.status === 'Replied').length + closedLeads;
   const promisedLeads = leads.filter(l => l.status === 'Promised').length;
@@ -14,7 +16,7 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
     labels: ['Replied/Closed', 'Promised', 'Ignored/Lost'],
     datasets: [{
       data: [repliedLeads, promisedLeads, ignored],
-      backgroundColor: ['#F97316', '#3B82F6', '#10B981'],
+      backgroundColor: ['#F97316', '#10B981', '#3B82F6'], // Orange, Green, Blue
       borderWidth: 0,
       cutout: '80%',
     }]
@@ -49,7 +51,13 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
          </div>
       </div>
       
-      <div className="flex flex-col gap-3 mt-auto">
+      <div className="flex flex-col gap-2 mt-auto">
+        <div className="flex items-center justify-between text-[11px] pb-1 border-b border-white/5">
+          <div className="flex items-center gap-2 text-gray-300 font-bold">
+             Total de Respostas
+          </div>
+          <span className="text-[#00A3FF] font-bold">{totalReplies} respostas</span>
+        </div>
         <div className="flex items-center justify-between text-[11px]">
           <div className="flex items-center gap-2 text-gray-400 font-medium">
             <span className="w-2 h-2 rounded-full bg-[#F97316]"></span> Foco em Leads

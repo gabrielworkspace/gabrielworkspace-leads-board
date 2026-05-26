@@ -31,15 +31,19 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
 
   useEffect(() => {
     if (isOpen) {
-      setMetricsForm({
-        messagesSent: '',
-        messagesReplied: '',
-        adSpend: '',
-        lpRevenue: '',
-      });
+      if (currentMetrics) {
+        setMetricsForm({
+          messagesSent: currentMetrics.messagesSent !== undefined ? currentMetrics.messagesSent.toString() : '',
+          messagesReplied: currentMetrics.messagesReplied !== undefined ? currentMetrics.messagesReplied.toString() : '',
+          adSpend: currentMetrics.adSpend !== undefined ? currentMetrics.adSpend.toString() : '',
+          lpRevenue: currentMetrics.lpRevenue !== undefined ? currentMetrics.lpRevenue.toString() : '',
+        });
+      } else {
+        setMetricsForm({ messagesSent: '', messagesReplied: '', adSpend: '', lpRevenue: '' });
+      }
       setTab('outreach');
     }
-  }, [isOpen]);
+  }, [isOpen, currentMetrics]);
 
   const handleSaveMetrics = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,20 +52,8 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
       messagesReplied: metricsForm.messagesReplied === '' ? 0 : Number(metricsForm.messagesReplied),
       adSpend: metricsForm.adSpend === '' ? 0 : Number(metricsForm.adSpend),
       lpRevenue: metricsForm.lpRevenue === '' ? 0 : Number(metricsForm.lpRevenue),
-    }, true); // true = incremental
+    }, false); // false = overwrite (standard mode)
     onClose();
-  };
-
-  const handleResetToday = () => {
-    if (window.confirm('Tem certeza que deseja ZERAR as métricas de hoje? (Use isso se você digitou algum número errado)')) {
-      onSaveMetrics({
-        messagesSent: 0,
-        messagesReplied: 0,
-        adSpend: 0,
-        lpRevenue: 0,
-      }, false); // false = overwrite with 0
-      onClose();
-    }
   };
 
   const handleAddLead = (e: React.FormEvent) => {
@@ -111,37 +103,31 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
 
             <div className="flex gap-1 mb-6 bg-black/40 p-1 rounded-xl overflow-x-auto no-scrollbar">
               <button type="button" onClick={() => setTab('outreach')} className={`flex-1 min-w-[70px] py-1.5 rounded-lg text-[10px] sm:text-xs font-medium transition-colors ${tab === 'outreach' ? 'bg-[#00A3FF] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>Abordagem</button>
-              <button type="button" onClick={() => setTab('financial')} className={`flex-1 min-w-[70px] py-1.5 rounded-lg text-[10px] sm:text-xs font-medium transition-colors ${tab === 'financial' ? 'bg-[#00A3FF] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>Financeiro</button>
               <button type="button" onClick={() => setTab('leads')} className={`flex-1 min-w-[70px] py-1.5 rounded-lg text-[10px] sm:text-xs font-medium transition-colors ${tab === 'leads' ? 'bg-[#00A3FF] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>Lead</button>
+              <button type="button" onClick={() => setTab('financial')} className={`flex-1 min-w-[70px] py-1.5 rounded-lg text-[10px] sm:text-xs font-medium transition-colors ${tab === 'financial' ? 'bg-[#00A3FF] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>Financeiro</button>
               <button type="button" onClick={() => setTab('settings')} className={`flex-1 min-w-[70px] py-1.5 rounded-lg text-[10px] sm:text-xs font-medium transition-colors ${tab === 'settings' ? 'bg-[#00A3FF] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>Config.</button>
             </div>
 
             {tab === 'outreach' && (
               <form className="space-y-5" onSubmit={handleSaveMetrics}>
                 <div className="space-y-3">
-                   <div className="flex justify-between items-center border-b border-white/5 pb-1">
-                     <h4 className="text-[10px] uppercase tracking-widest text-[#00A3FF] font-bold">Adicionar Abordagens</h4>
-                     <span className="text-[10px] text-gray-500 font-bold">TOTAL HOJE: {currentMetrics?.messagesSent || 0}</span>
-                   </div>
-                   <p className="text-xs text-gray-400 mb-4">Insira apenas as MENSAGENS NOVAS que você quer somar ao dia de hoje.</p>
+                   <h4 className="text-[10px] uppercase tracking-widest text-[#00A3FF] font-bold border-b border-white/5 pb-1">Métricas de Abordagem</h4>
+                   <p className="text-xs text-gray-400 mb-4">Insira o total final de mensagens para o dia de hoje.</p>
                    <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-400 mb-1">Somar Enviadas</label>
-                      <input type="number" value={metricsForm.messagesSent} onChange={e => setMetricsForm({...metricsForm, messagesSent: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="+ Ex: 10" />
+                      <label className="block text-xs font-medium text-gray-400 mb-1">Mensagens Enviadas</label>
+                      <input type="number" value={metricsForm.messagesSent} onChange={e => setMetricsForm({...metricsForm, messagesSent: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: 50" />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-400 mb-1">Somar Respondidas</label>
-                      <input type="number" value={metricsForm.messagesReplied} onChange={e => setMetricsForm({...metricsForm, messagesReplied: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="+ Ex: 2" />
+                      <label className="block text-xs font-medium text-gray-400 mb-1">Respondidas (Manual)</label>
+                      <input type="number" value={metricsForm.messagesReplied} onChange={e => setMetricsForm({...metricsForm, messagesReplied: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: 5" />
                     </div>
                   </div>
                 </div>
                 
-                <div className="pt-4 space-y-2">
+                <div className="pt-4">
                   <button type="submit" className="w-full btn-primary flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,163,255,0.4)]">
-                    <PlusCircle className="w-4 h-4" /> Somar Aos Dados de Hoje
-                  </button>
-                  <button type="button" onClick={handleResetToday} className="w-full py-2 text-xs text-gray-500 hover:text-red-400 transition-colors">
-                    Escreveu errado? Clique aqui para zerar o dia
+                    <Save className="w-4 h-4" /> Atualizar Dados de Hoje
                   </button>
                 </div>
               </form>
