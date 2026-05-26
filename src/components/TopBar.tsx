@@ -1,28 +1,43 @@
-import { ChevronLeft, ChevronRight, Calendar, Sparkles, MessageSquare, Bell } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, Sparkles, MessageSquare, Bell, Menu } from 'lucide-react';
 import profilePic from '../../img/WhatsApp Image 2026-05-22 at 14.11.20(1).jpeg';
 
 interface Props {
   dateFilter: string;
   setDateFilter: (val: string) => void;
+  onOpenSidebar?: () => void;
 }
 
-export function TopBar({ dateFilter, setDateFilter }: Props) {
+export function TopBar({ dateFilter, setDateFilter, onOpenSidebar }: Props) {
   return (
-    <header className="flex flex-col gap-8 mb-8 mt-2">
-      <div className="flex justify-between items-center w-full">
-         <div className="flex items-center gap-2 text-sm text-gray-400 font-medium tracking-wide">
-           <span className="hover:text-white cursor-pointer transition-colors">Principal</span>
-           <span>/</span>
-           <span className="text-white">Visão Geral</span>
+    <header className="flex flex-col gap-6 lg:gap-8 mb-6 lg:mb-8 mt-2">
+      <div className="flex flex-col lg:flex-row justify-between lg:items-center w-full gap-4">
+         <div className="flex items-center justify-between w-full lg:w-auto">
+           <div className="flex items-center gap-2 text-sm text-gray-400 font-medium tracking-wide">
+             <button onClick={onOpenSidebar} className="lg:hidden p-2 -ml-2 text-white hover:bg-white/5 rounded-lg">
+               <Menu size={20} />
+             </button>
+             <span className="hidden lg:inline hover:text-white cursor-pointer transition-colors">Principal</span>
+             <span className="hidden lg:inline">/</span>
+             <span className="text-white">Visão Geral</span>
+           </div>
+           
+           <div className="flex items-center gap-2 lg:hidden">
+              <button className="w-9 h-9 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400"><MessageSquare size={14}/></button>
+              <button className="w-9 h-9 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 relative">
+                <Bell size={14}/>
+                <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-[#00A3FF] rounded-full shadow-[0_0_8px_#00A3FF]"></span>
+              </button>
+              <img src={profilePic} className="w-9 h-9 rounded-xl object-cover ml-1 border border-white/10" alt="Profile"/>
+           </div>
          </div>
          
-         <div className="flex items-center gap-4">
+         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
            {/* Date Filter disguised as a range picker */}
-           <div className="flex items-center bg-[#121212] border border-white/5 rounded-xl h-10">
+           <div className="flex-1 lg:flex-none flex items-center bg-[#121212] border border-white/5 rounded-xl h-10">
              <button className="px-3 hover:bg-white/5 rounded-l-xl h-full flex items-center text-gray-400"><ChevronLeft size={16}/></button>
-             <div className="flex items-center gap-2 px-3 border-x border-white/5 h-full">
+             <div className="flex items-center justify-center gap-2 px-3 border-x border-white/5 h-full flex-1">
                 <Calendar size={14} className="text-gray-400"/>
-                <select value={dateFilter} onChange={e => setDateFilter(e.target.value)} className="bg-transparent text-xs font-medium text-white outline-none cursor-pointer appearance-none">
+                <select value={dateFilter} onChange={e => setDateFilter(e.target.value)} className="bg-transparent text-xs font-medium text-white outline-none cursor-pointer appearance-none text-center">
                   <option value="30" className="bg-[#121212]">Últimos 30 Dias</option>
                   <option value="7" className="bg-[#121212]">Últimos 7 Dias</option>
                   <option value="all" className="bg-[#121212]">Todo o Período</option>
@@ -31,11 +46,11 @@ export function TopBar({ dateFilter, setDateFilter }: Props) {
              <button className="px-3 hover:bg-white/5 rounded-r-xl h-full flex items-center text-gray-400"><ChevronRight size={16}/></button>
            </div>
            
-           <button className="btn-primary text-xs px-4 h-10 flex items-center gap-2">
-             <Sparkles size={14} /> Testar Previsão por IA
+           <button className="btn-primary flex-1 lg:flex-none text-xs px-4 h-10 flex items-center justify-center gap-2 hidden sm:flex">
+             <Sparkles size={14} /> Testar Previsão
            </button>
            
-           <div className="flex items-center gap-2 ml-4">
+           <div className="hidden lg:flex items-center gap-2 ml-4">
              <button className="w-10 h-10 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors"><MessageSquare size={16}/></button>
              <button className="w-10 h-10 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors relative">
                <Bell size={16}/>

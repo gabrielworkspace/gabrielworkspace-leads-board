@@ -5,9 +5,11 @@ interface Props {
   activeView: string;
   setActiveView: (view: string) => void;
   onLogout: () => void;
+  isOpen?: boolean;
+  setIsOpen?: (val: boolean) => void;
 }
 
-export function Sidebar({ activeView, setActiveView, onLogout }: Props) {
+export function Sidebar({ activeView, setActiveView, onLogout, isOpen, setIsOpen }: Props) {
   const mainItems = [
     { icon: <LayoutDashboard size={18} />, label: 'Visão Geral' },
     { icon: <Clock size={18} />, label: 'Métricas de Tempo' },
@@ -23,7 +25,10 @@ export function Sidebar({ activeView, setActiveView, onLogout }: Props) {
   ];
 
   return (
-    <aside className="w-[240px] flex flex-col h-screen py-6 px-4 sticky top-0 border-r border-white/5 bg-[#0A0A0A] z-40">
+    <aside className={clsx(
+      "w-[240px] flex flex-col h-screen py-6 px-4 fixed lg:sticky top-0 left-0 border-r border-white/5 bg-[#0A0A0A] z-40 transition-transform duration-300",
+      isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+    )}>
       {/* Logo */}
       <div className="flex items-center gap-3 mb-10 px-2">
         <div className="w-8 h-8 flex-shrink-0 bg-white rounded-md flex items-center justify-center transform -skew-x-12">

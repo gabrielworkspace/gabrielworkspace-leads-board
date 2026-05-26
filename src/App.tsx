@@ -38,6 +38,7 @@ function App() {
   const [activeView, setActiveView] = useState('Visão Geral');
   const [dateFilter, setDateFilter] = useState('30');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { metrics, leads, updateTodayMetrics, addLead, removeLead, clearData, loading } = useDashboardData();
   
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -75,23 +76,31 @@ function App() {
   return (
     <div className="h-screen w-screen flex relative overflow-hidden bg-[#050505] justify-center">
       <div className="flex w-full max-w-[1920px] mx-auto bg-transparent">
-        <Sidebar activeView={activeView} setActiveView={setActiveView} onLogout={handleLogout} />
+        <Sidebar activeView={activeView} setActiveView={(v) => { setActiveView(v); setIsMobileMenuOpen(false); }} onLogout={handleLogout} isOpen={isMobileMenuOpen} setIsOpen={setIsMobileMenuOpen} />
 
-        <main className="flex-1 h-screen overflow-y-auto p-6 lg:p-10 flex flex-col relative z-10 no-scrollbar">
-          <TopBar dateFilter={dateFilter} setDateFilter={setDateFilter} />
+        {/* Overlay for mobile when sidebar is open */}
+        {isMobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/60 z-30 lg:hidden backdrop-blur-sm"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
+        <main className="flex-1 h-screen overflow-y-auto p-4 lg:p-10 flex flex-col relative z-10 no-scrollbar w-full">
+          <TopBar dateFilter={dateFilter} setDateFilter={setDateFilter} onOpenSidebar={() => setIsMobileMenuOpen(true)} />
           
           {activeView === 'Visão Geral' ? (
-            <div className="flex flex-col gap-6 pb-20">
+            <div className="flex flex-col gap-6 pb-20 w-full">
               
               {/* TOP GRID: 3 Columns */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
                 <ProgressChart metrics={filteredMetrics} />
                 <QuickStats metrics={filteredMetrics} />
                 <DailySummary metrics={filteredMetrics} leads={leads} />
               </div>
               
               {/* BOTTOM GRID: Table */}
-              <div className="w-full">
+              <div className="w-full overflow-hidden">
                 <LeadsTable leads={leads} onRemoveLead={removeLead} />
               </div>
 
@@ -115,7 +124,7 @@ function App() {
 
       <button 
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-10 right-10 w-14 h-14 bg-[#00A3FF] rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,163,255,0.4)] hover:bg-[#008AE6] hover:scale-110 active:scale-95 transition-all z-50 text-white"
+        className="fixed bottom-6 right-6 lg:bottom-10 lg:right-10 w-14 h-14 bg-[#00A3FF] rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,163,255,0.4)] hover:bg-[#008AE6] hover:scale-110 active:scale-95 transition-all z-50 text-white"
         title="Add Data"
       >
         <Plus className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
