@@ -70,9 +70,39 @@ function App() {
 
   const filteredMetrics = useMemo(() => {
     if (dateFilter === 'all') return metrics;
+    if (dateFilter === 'yesterday') return metrics.slice(-2, -1);
     const days = parseInt(dateFilter);
     return metrics.slice(-days);
   }, [metrics, dateFilter]);
+
+  const filteredLeads = useMemo(() => {
+    if (dateFilter === 'all') return leads;
+    
+    const todayStr = new Date().toISOString().split('T')[0];
+    
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    const yesterdayStr = d.toISOString().split('T')[0];
+
+    if (dateFilter === '1') {
+      return leads.filter(l => l.created_at && l.created_at.startsWith(todayStr));
+    }
+    
+    if (dateFilter === 'yesterday') {
+      return leads.filter(l => l.created_at && l.created_at.startsWith(yesterdayStr));
+    }
+
+    const days = parseInt(dateFilter);
+    const pastD = new Date();
+    pastD.setDate(pastD.getDate() - days + 1);
+    const pastDateStr = pastD.toISOString().split('T')[0];
+    
+    return leads.filter(l => {
+      if (!l.created_at) return false;
+      const leadDateStr = l.created_at.split('T')[0];
+      return leadDateStr >= pastDateStr;
+    });
+  }, [leads, dateFilter]);
 
   if (!currentUserId) {
     return <Login onLogin={handleLogin} />;
@@ -109,17 +139,17 @@ function App() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
                 <ProgressChart metrics={filteredMetrics} />
                 <QuickStats metrics={filteredMetrics} onEditMetrics={() => openModal('outreach')} onEditAds={() => openModal('financial')} />
-                <DailySummary metrics={filteredMetrics} leads={leads} />
+                <DailySummary metrics={filteredMetrics} leads={filteredLeads} />
               </div>
               
               {/* FINANCIAL BREAKDOWN */}
               <div className="w-full">
-                <FinancialSummary metrics={filteredMetrics} leads={leads} />
+                <FinancialSummary metrics={filteredMetrics} leads={filteredLeads} />
               </div>
               
               {/* BOTTOM GRID: Table */}
               <div className="w-full overflow-hidden">
-                <LeadsTable leads={leads} onRemoveLead={removeLead} />
+                <LeadsTable leads={filteredLeads} onRemoveLead={removeLead} />
               </div>
 
             </div>

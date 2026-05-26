@@ -23,7 +23,7 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport 
     onOpenReport();
   };
 
-  const filterOptions = ['1', '7', '30', 'all'];
+  const filterOptions = ['1', 'yesterday', '7', '30', 'all'];
   const currentFilterIndex = filterOptions.indexOf(dateFilter);
 
   const handlePrevFilter = () => {
@@ -73,6 +73,7 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport 
                 <Calendar size={14} className="text-gray-400"/>
                 <select value={dateFilter} onChange={e => setDateFilter(e.target.value)} className="bg-transparent text-xs font-medium text-white outline-none cursor-pointer appearance-none text-center">
                   <option value="1" className="bg-[#121212]">Hoje</option>
+                  <option value="yesterday" className="bg-[#121212]">Ontem</option>
                   <option value="7" className="bg-[#121212]">Últimos 7 Dias</option>
                   <option value="30" className="bg-[#121212]">Últimos 30 Dias</option>
                   <option value="all" className="bg-[#121212]">Todo o Período</option>
