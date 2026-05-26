@@ -37,9 +37,10 @@ interface Task {
 
 interface DailyTasksProps {
   dateFilter?: string;
+  userId?: string | null;
 }
 
-export function DailyTasks({ dateFilter = '1' }: DailyTasksProps) {
+export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -49,13 +50,17 @@ export function DailyTasks({ dateFilter = '1' }: DailyTasksProps) {
   const [historyPeriod, setHistoryPeriod] = useState<7 | 15 | 30 | 'all'>(7);
 
   useEffect(() => {
-    loadTasks();
-  }, []);
+    if (userId) {
+      loadTasks();
+    }
+  }, [userId]);
 
   async function loadTasks() {
+    if (!userId) return;
     const { data } = await supabase
       .from('tasks')
       .select('*')
+      .eq('user_id', userId)
       .order('created_at', { ascending: true });
     
     if (data) setTasks(data);
@@ -71,7 +76,7 @@ export function DailyTasks({ dateFilter = '1' }: DailyTasksProps) {
       targetDate.setDate(targetDate.getDate() - 1);
     }
 
-    const insertData: any = { title: newTaskTitle.trim() };
+    const insertData: any = { user_id: userId, title: newTaskTitle.trim() };
     if (dateFilter === 'yesterday') {
       insertData.created_at = targetDate.toISOString();
     }

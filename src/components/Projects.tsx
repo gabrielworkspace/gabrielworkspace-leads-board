@@ -10,7 +10,11 @@ interface Project {
 
 const STATUSES = ['Em Planejamento', 'Em Andamento', 'Concluído'];
 
-export function Projects() {
+interface Props {
+  userId?: string | null;
+}
+
+export function Projects({ userId }: Props) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -18,13 +22,17 @@ export function Projects() {
   const [newProjectName, setNewProjectName] = useState('');
 
   useEffect(() => {
-    loadProjects();
-  }, []);
+    if (userId) {
+      loadProjects();
+    }
+  }, [userId]);
 
   async function loadProjects() {
+    if (!userId) return;
     const { data } = await supabase
       .from('projects')
       .select('*')
+      .eq('user_id', userId)
       .order('created_at', { ascending: false });
     
     if (data) setProjects(data);
@@ -37,7 +45,7 @@ export function Projects() {
 
     const { data } = await supabase
       .from('projects')
-      .insert([{ name: newProjectName.trim(), status: 'Em Planejamento' }])
+      .insert([{ user_id: userId, name: newProjectName.trim(), status: 'Em Planejamento' }])
       .select()
       .single();
 

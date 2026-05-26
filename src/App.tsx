@@ -170,7 +170,7 @@ function App() {
           ) : activeView === 'Planejamento' ? (
             <Planner userId={currentUserId} />
           ) : activeView === 'Projetos' ? (
-            <Projects />
+            <Projects userId={currentUserId} />
           ) : activeView === 'Comparação Dump' ? (
             <DumpComparison />
           ) : (
