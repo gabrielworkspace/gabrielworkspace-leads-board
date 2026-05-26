@@ -64,9 +64,9 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport 
            {/* Date Filter disguised as a range picker */}
            <div className="flex-1 lg:flex-none flex items-center bg-[#121212] border border-white/5 rounded-xl h-10">
              <button 
-               onClick={handlePrevFilter}
-               disabled={currentFilterIndex <= 0}
-               className={`px-3 hover:bg-white/5 rounded-l-xl h-full flex items-center ${currentFilterIndex <= 0 ? 'text-gray-600 cursor-not-allowed' : 'text-gray-400'}`}>
+               onClick={handleNextFilter}
+               disabled={currentFilterIndex >= filterOptions.length - 1}
+               className={`px-3 hover:bg-white/5 rounded-l-xl h-full flex items-center ${currentFilterIndex >= filterOptions.length - 1 ? 'text-gray-600 cursor-not-allowed' : 'text-gray-400'}`}>
                <ChevronLeft size={16}/>
              </button>
              <div className="flex items-center justify-center gap-2 px-3 border-x border-white/5 h-full flex-1">
@@ -80,9 +80,9 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport 
                 </select>
              </div>
              <button 
-               onClick={handleNextFilter}
-               disabled={currentFilterIndex >= filterOptions.length - 1}
-               className={`px-3 hover:bg-white/5 rounded-r-xl h-full flex items-center ${currentFilterIndex >= filterOptions.length - 1 ? 'text-gray-600 cursor-not-allowed' : 'text-gray-400'}`}>
+               onClick={handlePrevFilter}
+               disabled={currentFilterIndex <= 0}
+               className={`px-3 hover:bg-white/5 rounded-r-xl h-full flex items-center ${currentFilterIndex <= 0 ? 'text-gray-600 cursor-not-allowed' : 'text-gray-400'}`}>
                <ChevronRight size={16}/>
              </button>
            </div>
