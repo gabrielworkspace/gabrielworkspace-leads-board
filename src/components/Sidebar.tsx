@@ -1,4 +1,4 @@
-import { LayoutDashboard, Clock, CheckSquare, Layers, Trophy, Calendar, LogOut, Users } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Layers, Trophy, Calendar, LogOut, Users } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface Props {
