@@ -1,4 +1,4 @@
-import { Play, MoreHorizontal, History, Trash2, CalendarClock } from 'lucide-react';
+import { MoreHorizontal, History, Trash2, CalendarClock } from 'lucide-react';
 import type { Lead } from '../types';
 
 interface Props {
