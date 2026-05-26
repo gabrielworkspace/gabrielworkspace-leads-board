@@ -15,4 +15,5 @@ export interface Lead {
   deadline?: string; 
   value?: number;
   promiseDate?: string;
+  created_at?: string;
 }

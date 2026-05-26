@@ -5,11 +5,23 @@ interface Props {
   dateFilter: string;
   setDateFilter: (val: string) => void;
   onOpenSidebar?: () => void;
+  onOpenReport: () => void;
 }
 
-export function TopBar({ dateFilter, setDateFilter, onOpenSidebar }: Props) {
+export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport }: Props) {
   const now = new Date();
+  const todayStr = now.toISOString().split('T')[0];
   const isAfter10PM = now.getHours() >= 22;
+  const hasSeenReport = localStorage.getItem('@NexusBoard:lastReportSeen') === todayStr;
+  
+  const showNotification = isAfter10PM && !hasSeenReport;
+
+  const handleOpenReport = () => {
+    if (showNotification) {
+      localStorage.setItem('@NexusBoard:lastReportSeen', todayStr);
+    }
+    onOpenReport();
+  };
 
   return (
     <header className="flex flex-col gap-6 lg:gap-8 mb-6 lg:mb-8 mt-2">
@@ -25,9 +37,9 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar }: Props) {
            </div>
            
            <div className="flex items-center gap-2 lg:hidden">
-              <button className="w-9 h-9 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 relative transition-colors hover:text-white">
+              <button onClick={handleOpenReport} className="w-9 h-9 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 relative transition-colors hover:text-white">
                 <Bell size={14}/>
-                {isAfter10PM && <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-[#00A3FF] rounded-full shadow-[0_0_8px_#00A3FF]"></span>}
+                {showNotification && <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-[#00A3FF] rounded-full shadow-[0_0_8px_#00A3FF]"></span>}
               </button>
               <img src={profilePic} className="w-9 h-9 rounded-xl object-cover ml-1 border border-white/10" alt="Profile"/>
            </div>
@@ -49,9 +61,9 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar }: Props) {
            </div>
            
            <div className="hidden lg:flex items-center gap-2 ml-4">
-             <button className="w-10 h-10 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors relative">
+             <button onClick={handleOpenReport} className="w-10 h-10 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors relative">
                <Bell size={16}/>
-               {isAfter10PM && <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[#00A3FF] rounded-full shadow-[0_0_8px_#00A3FF]"></span>}
+               {showNotification && <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[#00A3FF] rounded-full shadow-[0_0_8px_#00A3FF]"></span>}
              </button>
              <img src={profilePic} className="w-10 h-10 rounded-xl object-cover ml-2 border border-white/10" alt="Profile"/>
            </div>

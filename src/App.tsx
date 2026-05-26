@@ -7,6 +7,7 @@ import { DailySummary } from './components/DailySummary';
 import { FinancialSummary } from './components/FinancialSummary';
 import { LeadsTable } from './components/LeadsTable';
 import { DataEntryModal } from './components/DataEntryModal';
+import { DailyReportModal } from './components/DailyReportModal';
 import { Login } from './components/Login';
 import { DailyTasks } from './components/DailyTasks';
 import { BestDays } from './components/BestDays';
@@ -43,6 +44,7 @@ function App() {
   const [activeView, setActiveView] = useState('Visão Geral');
   const [dateFilter, setDateFilter] = useState('30');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [modalInitialTab, setModalInitialTab] = useState<'outreach' | 'financial' | 'leads' | 'settings'>('outreach');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(() => {
@@ -98,7 +100,7 @@ function App() {
         )}
 
         <main className="flex-1 h-screen overflow-y-auto p-4 lg:p-10 flex flex-col relative z-10 no-scrollbar w-full">
-          <TopBar dateFilter={dateFilter} setDateFilter={setDateFilter} onOpenSidebar={() => setIsMobileMenuOpen(true)} />
+          <TopBar dateFilter={dateFilter} setDateFilter={setDateFilter} onOpenSidebar={() => setIsMobileMenuOpen(true)} onOpenReport={() => setIsReportModalOpen(true)} />
           
           {activeView === 'Visão Geral' ? (
             <div className="flex flex-col gap-6 pb-20 w-full">
@@ -162,6 +164,13 @@ function App() {
         onAddLead={addLead}
         onClearData={clearData}
         initialTab={modalInitialTab}
+      />
+
+      <DailyReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        metrics={metrics[metrics.length - 1]}
+        leads={leads}
       />
     </div>
   );
