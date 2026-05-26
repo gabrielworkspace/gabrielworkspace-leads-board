@@ -114,6 +114,15 @@ export function DailyTasks({ dateFilter = '1' }: DailyTasksProps) {
   const todayTasks = useMemo(() => {
     return tasks.filter(t => {
       const createdDate = new Date(t.created_at);
+      
+      // If the task was created after the target date, it should not show up on the target date
+      const createdDateStart = new Date(createdDate.getFullYear(), createdDate.getMonth(), createdDate.getDate());
+      const targetDateStart = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+      
+      if (createdDateStart > targetDateStart) {
+        return false;
+      }
+      
       // Show if it was created on the target date OR if it's uncompleted (carries over)
       return isSameDay(createdDate, targetDate) || !t.completed;
     });
@@ -141,7 +150,7 @@ export function DailyTasks({ dateFilter = '1' }: DailyTasksProps) {
       grouped,
       sortedDates
     };
-  }, [tasks, historyPeriod, now]);
+  }, [tasks, historyPeriod]);
 
   const chartData = {
     labels: historyData.sortedDates.map(d => format(parseISO(d), 'dd/MM', { locale: ptBR })),
