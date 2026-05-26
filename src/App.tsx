@@ -76,7 +76,7 @@ function App() {
   return (
     <div className="h-screen w-screen flex relative overflow-hidden bg-[#050505] justify-center">
       <div className="flex w-full max-w-[1920px] mx-auto bg-transparent">
-        <Sidebar activeView={activeView} setActiveView={(v) => { setActiveView(v); setIsMobileMenuOpen(false); }} onLogout={handleLogout} isOpen={isMobileMenuOpen} setIsOpen={setIsMobileMenuOpen} />
+        <Sidebar activeView={activeView} setActiveView={(v) => { setActiveView(v); setIsMobileMenuOpen(false); }} onLogout={handleLogout} isOpen={isMobileMenuOpen} />
 
         {/* Overlay for mobile when sidebar is open */}
         {isMobileMenuOpen && (

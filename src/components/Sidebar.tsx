@@ -6,10 +6,9 @@ interface Props {
   setActiveView: (view: string) => void;
   onLogout: () => void;
   isOpen?: boolean;
-  setIsOpen?: (val: boolean) => void;
 }
 
-export function Sidebar({ activeView, setActiveView, onLogout, isOpen, setIsOpen }: Props) {
+export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) {
   const mainItems = [
     { icon: <LayoutDashboard size={18} />, label: 'Visão Geral' },
     { icon: <Clock size={18} />, label: 'Métricas de Tempo' },
