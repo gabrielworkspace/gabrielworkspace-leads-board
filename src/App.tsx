@@ -164,7 +164,7 @@ function App() {
 
             </div>
           ) : activeView === 'Tarefas Diárias' ? (
-            <DailyTasks dateFilter={dateFilter} />
+            <DailyTasks dateFilter={dateFilter} userId={currentUserId} />
           ) : activeView === 'Melhores Dias' ? (
             <BestDays />
           ) : activeView === 'Planejamento' ? (
