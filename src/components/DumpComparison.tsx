@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
-import { TrendingUp, ArrowUpRight, ArrowDownRight, Award, Activity } from 'lucide-react';
+import { TrendingUp, ArrowUpRight, ArrowDownRight, Award } from 'lucide-react';
 import { Line } from 'react-chartjs-2';
 import type { ChartData } from 'chart.js';
 import dumpLogo from '../../img/logodump_laranja.svg';
