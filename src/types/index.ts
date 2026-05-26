@@ -7,11 +7,13 @@ export interface DailyMetrics {
 }
 
 export type LeadStatus = 'Replied' | 'Ignored' | 'Closed' | 'Promised';
+export type ServiceType = 'Landing Page' | 'Social Media' | 'SaaS';
 
 export interface Lead {
   id: string;
   name: string;
   status: LeadStatus;
+  serviceType?: ServiceType;
   deadline?: string; 
   value?: number;
   promiseDate?: string;

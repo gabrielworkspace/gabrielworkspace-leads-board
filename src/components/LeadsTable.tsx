@@ -20,6 +20,7 @@ export function LeadsTable({ leads, onRemoveLead, onEditLead }: Props) {
           <thead>
             <tr className="text-[10px] text-gray-500 uppercase tracking-widest border-b border-white/5">
               <th className="pb-3 font-medium px-4">Nome</th>
+              <th className="pb-3 font-medium">Serviço</th>
               <th className="pb-3 font-medium">Retorno</th>
               <th className="pb-3 font-medium">Valor</th>
               <th className="pb-3 font-medium">Status</th>
@@ -29,12 +30,15 @@ export function LeadsTable({ leads, onRemoveLead, onEditLead }: Props) {
           <tbody>
             {leads.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center py-8 text-sm text-gray-500">Nenhum lead encontrado.</td>
+                <td colSpan={6} className="text-center py-8 text-sm text-gray-500">Nenhum lead encontrado.</td>
               </tr>
             )}
             {leads.map(lead => (
               <tr key={lead.id} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
                 <td className="py-4 px-4 text-sm font-medium text-white">{lead.name}</td>
+                <td className="py-4 text-xs text-gray-400">
+                  <span className="bg-white/5 px-2 py-1 rounded-md border border-white/10">{lead.serviceType || '--'}</span>
+                </td>
                 <td className="py-4 text-xs text-gray-400">
                   {lead.promiseDate ? (
                     <span className="flex items-center gap-2">

@@ -1,7 +1,7 @@
 import { X, Save, Trash2, PlusCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import type { DailyMetrics, LeadStatus, Lead } from '../types';
+import type { DailyMetrics, LeadStatus, Lead, ServiceType } from '../types';
 
 interface Props {
   isOpen: boolean;
@@ -28,6 +28,7 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
   const [leadForm, setLeadForm] = useState({
     name: '',
     status: 'Replied' as LeadStatus,
+    serviceType: 'Landing Page' as ServiceType,
     value: '',
     promiseDate: '',
     observations: '',
@@ -50,12 +51,13 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
         setLeadForm({
           name: editingLead.name,
           status: editingLead.status,
+          serviceType: editingLead.serviceType || 'Landing Page',
           value: editingLead.value?.toString() || '',
           promiseDate: editingLead.promiseDate || '',
           observations: editingLead.observations || '',
         });
       } else {
-        setLeadForm({ name: '', status: 'Replied', value: '', promiseDate: '', observations: '' });
+        setLeadForm({ name: '', status: 'Replied', serviceType: 'Landing Page', value: '', promiseDate: '', observations: '' });
       }
 
       setTab(initialTab);
@@ -78,6 +80,7 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
     const leadData = {
       name: leadForm.name,
       status: leadForm.status,
+      serviceType: leadForm.serviceType,
       value: leadForm.value ? Number(leadForm.value) : undefined,
       promiseDate: leadForm.status === 'Promised' && leadForm.promiseDate ? leadForm.promiseDate : undefined,
       observations: leadForm.observations,
@@ -88,7 +91,7 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
     } else {
       onAddLead(leadData);
     }
-    setLeadForm({ name: '', status: 'Replied', value: '', promiseDate: '', observations: '' });
+    setLeadForm({ name: '', status: 'Replied', serviceType: 'Landing Page', value: '', promiseDate: '', observations: '' });
     onClose();
     setTab('outreach');
   };
@@ -195,6 +198,14 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
                     <option value="Closed">Fechou</option>
                     <option value="Promised">Prometeu dar uma resposta</option>
                     <option value="Ignored">Ignorado</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1">Serviço Oferecido</label>
+                  <select value={leadForm.serviceType} onChange={e => setLeadForm({...leadForm, serviceType: e.target.value as ServiceType})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm appearance-none">
+                    <option value="Landing Page">Landing Page</option>
+                    <option value="Social Media">Social Media</option>
+                    <option value="SaaS">SaaS</option>
                   </select>
                 </div>
                 

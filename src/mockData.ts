@@ -24,11 +24,11 @@ export const historicalMetrics: DailyMetrics[] = Array.from({ length: 30 }).map(
 });
 
 export const pipelineLeads: Lead[] = [
-  { id: '1', name: 'João Silva', status: 'Replied', deadline: '24h', value: 3000 },
-  { id: '2', name: 'Maria Souza', status: 'Replied', deadline: '48h', value: 1500 },
-  { id: '3', name: 'Tech Solutions', status: 'Closed', value: 2500 },
-  { id: '4', name: 'Eduardo (Insta)', status: 'Closed', value: 1000 },
-  { id: '5', name: 'Carlos (Whats)', status: 'Ignored' },
-  { id: '6', name: 'Ana Costa', status: 'Ignored' },
-  { id: '7', name: 'Pedro M.', status: 'Ignored' },
+  { id: '1', name: 'João Silva', status: 'Replied', deadline: '24h', value: 3000, serviceType: 'Landing Page' },
+  { id: '2', name: 'Maria Souza', status: 'Replied', deadline: '48h', value: 1500, serviceType: 'Social Media' },
+  { id: '3', name: 'Tech Solutions', status: 'Closed', value: 2500, serviceType: 'SaaS' },
+  { id: '4', name: 'Eduardo (Insta)', status: 'Closed', value: 1000, serviceType: 'Landing Page' },
+  { id: '5', name: 'Carlos (Whats)', status: 'Ignored', serviceType: 'Social Media' },
+  { id: '6', name: 'Ana Costa', status: 'Ignored', serviceType: 'Landing Page' },
+  { id: '7', name: 'Pedro M.', status: 'Ignored', serviceType: 'SaaS' },
 ];
