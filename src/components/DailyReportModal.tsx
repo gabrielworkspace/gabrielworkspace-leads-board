@@ -28,14 +28,14 @@ export function DailyReportModal({ isOpen, onClose, metrics, leads }: Props) {
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-[#111318] border border-white/10 w-full max-w-md rounded-[24px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
         
-        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-gradient-to-r from-[#00A3FF]/20 to-transparent">
+        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-gradient-to-r from-[#A3FF12]/20 to-transparent">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#00A3FF]/20 flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-[#00A3FF]" />
+            <div className="w-10 h-10 rounded-xl bg-[#A3FF12]/20 flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-[#A3FF12]" />
             </div>
             <div>
               <h3 className="text-xl font-bold text-white tracking-wide">Desempenho Diário</h3>
-              <p className="text-xs text-[#00A3FF] font-medium tracking-widest uppercase mt-0.5">Relatório das 22h</p>
+              <p className="text-xs text-[#A3FF12] font-medium tracking-widest uppercase mt-0.5">Relatório das 22h</p>
             </div>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full text-gray-400 hover:text-white transition-colors">
@@ -51,7 +51,7 @@ export function DailyReportModal({ isOpen, onClose, metrics, leads }: Props) {
               <span className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Enviadas</span>
             </div>
             <div className="bg-white/5 border border-white/5 rounded-2xl p-4 flex flex-col items-center text-center">
-              <Target className="w-5 h-5 text-[#00A3FF] mb-2" />
+              <Target className="w-5 h-5 text-[#A3FF12] mb-2" />
               <span className="text-2xl font-bold text-white">{messagesReplied}</span>
               <span className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Respostas</span>
             </div>

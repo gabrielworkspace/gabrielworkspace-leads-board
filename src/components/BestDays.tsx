@@ -69,7 +69,7 @@ export function BestDays() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[500px]">
-        <Loader2 className="w-8 h-8 text-[#00A3FF] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#A3FF12] animate-spin" />
       </div>
     );
   }
@@ -147,8 +147,8 @@ export function BestDays() {
       </div>
 
       {/* Dica */}
-      <div className="mt-8 bg-gradient-to-r from-[#00A3FF]/10 to-transparent border-l-4 border-[#00A3FF] p-6 rounded-r-2xl flex items-start gap-4">
-        <TrendingUp className="w-6 h-6 text-[#00A3FF] shrink-0 mt-1" />
+      <div className="mt-8 bg-gradient-to-r from-[#A3FF12]/10 to-transparent border-l-4 border-[#A3FF12] p-6 rounded-r-2xl flex items-start gap-4">
+        <TrendingUp className="w-6 h-6 text-[#A3FF12] shrink-0 mt-1" />
         <div>
           <h4 className="text-white font-bold mb-1">Como usar essa tela?</h4>
           <p className="text-gray-400 text-sm leading-relaxed">

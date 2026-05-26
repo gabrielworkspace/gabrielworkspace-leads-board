@@ -25,8 +25,8 @@ export function FinancialSummary({ metrics, leads }: Props) {
       {/* 1. Faturamento Total */}
       <div className="holo-panel p-6 flex flex-col relative group">
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-[#00A3FF]/10 flex items-center justify-center">
-            <DollarSign className="w-4 h-4 text-[#00A3FF]" />
+          <div className="w-8 h-8 rounded-lg bg-[#A3FF12]/10 flex items-center justify-center">
+            <DollarSign className="w-4 h-4 text-[#A3FF12]" />
           </div>
           <h3 className="text-sm font-medium text-gray-300">Faturamento Total</h3>
         </div>
@@ -49,8 +49,8 @@ export function FinancialSummary({ metrics, leads }: Props) {
       {/* 2. Lucro Real Descontado */}
       <div className="holo-panel p-6 flex flex-col relative group">
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-[#10B981]/10 flex items-center justify-center">
-            <TrendingUp className="w-4 h-4 text-[#10B981]" />
+          <div className="w-8 h-8 rounded-lg bg-[#8BE600]/10 flex items-center justify-center">
+            <TrendingUp className="w-4 h-4 text-[#8BE600]" />
           </div>
           <h3 className="text-sm font-medium text-gray-300">Lucro Real Descontado</h3>
         </div>
@@ -73,8 +73,8 @@ export function FinancialSummary({ metrics, leads }: Props) {
       {/* 3. Retorno do Tráfego Pago */}
       <div className="holo-panel p-6 flex flex-col relative group">
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-[#8B5CF6]/10 flex items-center justify-center">
-            <BarChart3 className="w-4 h-4 text-[#8B5CF6]" />
+          <div className="w-8 h-8 rounded-lg bg-[#C6F432]/10 flex items-center justify-center">
+            <BarChart3 className="w-4 h-4 text-[#C6F432]" />
           </div>
           <h3 className="text-sm font-medium text-gray-300">Raio-X do Tráfego Pago</h3>
         </div>
@@ -91,7 +91,7 @@ export function FinancialSummary({ metrics, leads }: Props) {
           </div>
           <div className="flex justify-between text-xs">
              <span className="text-gray-500">Retorno (Faturamento):</span>
-             <span className="text-[#10B981] font-medium">+ R$ {paidRevenue.toLocaleString('pt-BR')}</span>
+             <span className="text-[#A3FF12] font-medium">+ R$ {paidRevenue.toLocaleString('pt-BR')}</span>
           </div>
         </div>
       </div>

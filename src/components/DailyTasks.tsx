@@ -184,13 +184,13 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
       {
         label: 'Concluídas',
         data: historyData.sortedDates.map(d => historyData.grouped[d].completed),
-        borderColor: '#00A3FF',
+        borderColor: '#A3FF12',
         backgroundColor: 'rgba(0, 163, 255, 0.1)',
         borderWidth: 2,
         fill: true,
         tension: 0.4,
         pointBackgroundColor: '#111318',
-        pointBorderColor: '#00A3FF',
+        pointBorderColor: '#A3FF12',
         pointBorderWidth: 2,
         pointRadius: 4,
         pointHoverRadius: 6,
@@ -242,7 +242,7 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[500px]">
-        <Loader2 className="w-8 h-8 text-[#00A3FF] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#A3FF12] animate-spin" />
       </div>
     );
   }
@@ -256,12 +256,12 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
       {/* Header & Tabs */}
       <div className="flex flex-col gap-6">
         <div className="holo-panel p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#00A3FF] opacity-[0.03] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:opacity-[0.05] transition-opacity duration-700"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#A3FF12] opacity-[0.03] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:opacity-[0.05] transition-opacity duration-700"></div>
           
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00A3FF]/20 to-[#0055FF]/20 flex items-center justify-center">
-                <CheckSquare className="w-5 h-5 text-[#00A3FF]" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#A3FF12]/20 to-[#8BE600]/20 flex items-center justify-center">
+                <CheckSquare className="w-5 h-5 text-[#A3FF12]" />
               </div>
             <h2 className="text-2xl font-bold text-white tracking-wide">
               {dateFilter === 'yesterday' ? 'Tarefas de Ontem' : 'Tarefas Diárias'}
@@ -279,7 +279,7 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
               <div className="w-16 h-16 relative flex items-center justify-center">
                 <svg className="w-full h-full transform -rotate-90">
                   <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth="6" className="text-white/5" />
-                  <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth="6" strokeDasharray="175.9" strokeDashoffset={175.9 - (175.9 * progress) / 100} className="text-[#00A3FF] transition-all duration-1000 ease-out" />
+                  <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth="6" strokeDasharray="175.9" strokeDashoffset={175.9 - (175.9 * progress) / 100} className="text-[#A3FF12] transition-all duration-1000 ease-out" />
                 </svg>
               </div>
             </div>
@@ -290,13 +290,13 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
         <div className="flex bg-[#121212] p-1 rounded-xl border border-white/5 mx-auto sm:mx-0 inline-flex w-full sm:w-auto">
           <button 
             onClick={() => setActiveTab('today')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === 'today' ? 'bg-[#00A3FF] text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === 'today' ? 'bg-[#A3FF12] text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
           >
             <ListTodo size={16} /> {dateFilter === 'yesterday' ? 'Lista de Ontem' : 'Tarefas de Hoje'}
           </button>
           <button 
             onClick={() => setActiveTab('history')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === 'history' ? 'bg-[#00A3FF] text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === 'history' ? 'bg-[#A3FF12] text-white shadow-lg' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
           >
             <BarChart2 size={16} /> Histórico e Desempenho
           </button>
@@ -308,7 +308,7 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
           {/* Input */}
           <form onSubmit={addTask} className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#00A3FF] to-[#0055FF] rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-500"></div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-[#A3FF12] to-[#8BE600] rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-500"></div>
             <div className="relative flex items-center bg-[#111318] rounded-2xl border border-white/10 p-2 shadow-2xl">
               <input
                 type="text"
@@ -320,7 +320,7 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
               <button 
                 type="submit" 
                 disabled={!newTaskTitle.trim()}
-                className="bg-[#00A3FF] hover:bg-[#008AE6] disabled:opacity-50 disabled:hover:bg-[#00A3FF] text-white p-3 rounded-xl transition-all shadow-[0_0_15px_rgba(0,163,255,0.4)]"
+                className="bg-[#A3FF12] hover:bg-[#C6F432] disabled:opacity-50 disabled:hover:bg-[#A3FF12] text-white p-3 rounded-xl transition-all shadow-[0_0_15px_rgba(0,163,255,0.4)]"
               >
                 <Plus className="w-5 h-5" />
               </button>
@@ -349,7 +349,7 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
                     className="flex items-center gap-4 flex-1 cursor-pointer"
                     onClick={() => toggleTask(task)}
                   >
-                    <button className="text-[#00A3FF] hover:scale-110 transition-transform">
+                    <button className="text-[#A3FF12] hover:scale-110 transition-transform">
                       {task.completed ? <CheckCircle2 className="w-6 h-6" /> : <Circle className="w-6 h-6 text-gray-500" />}
                     </button>
                     <span className={clsx(
@@ -379,7 +379,7 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
           
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <BarChart2 className="w-5 h-5 text-[#00A3FF]" /> Desempenho
+              <BarChart2 className="w-5 h-5 text-[#A3FF12]" /> Desempenho
             </h3>
             <div className="flex bg-[#121212] rounded-lg border border-white/5 p-1 overflow-x-auto no-scrollbar">
               <button 
@@ -410,7 +410,7 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
           </div>
 
           <div className="bg-[#111318] border border-white/5 rounded-2xl p-6 h-[320px] relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#00A3FF] opacity-[0.02] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:opacity-[0.04] transition-opacity duration-700 pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#A3FF12] opacity-[0.02] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:opacity-[0.04] transition-opacity duration-700 pointer-events-none"></div>
             {historyData.sortedDates.length > 0 ? (
               <div className="relative z-10 w-full h-full">
                 <Line data={chartData} options={chartOptions} />
@@ -424,7 +424,7 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
 
           <div className="pt-4">
             <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
-              <Calendar className="w-5 h-5 text-[#00A3FF]" /> Histórico de Tarefas
+              <Calendar className="w-5 h-5 text-[#A3FF12]" /> Histórico de Tarefas
             </h3>
             
             <div className="space-y-6">
@@ -446,7 +446,7 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
                       <div className="p-2 space-y-1">
                         {data.tasks.map(task => (
                           <div key={task.id} className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/[0.02] transition-colors">
-                            {task.completed ? <CheckCircle2 className="w-4 h-4 text-[#00A3FF]" /> : <Circle className="w-4 h-4 text-gray-600" />}
+                            {task.completed ? <CheckCircle2 className="w-4 h-4 text-[#A3FF12]" /> : <Circle className="w-4 h-4 text-gray-600" />}
                             <span className={clsx("text-sm", task.completed ? "text-gray-500 line-through" : "text-gray-300")}>
                               {task.title}
                             </span>

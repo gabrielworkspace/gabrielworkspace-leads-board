@@ -29,7 +29,7 @@ export function Login({ onLogin }: Props) {
       
       <div className="w-full max-w-md holo-panel p-10 z-10 relative">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00A3FF] to-[#0055FF] flex-shrink-0 shadow-[0_0_30px_rgba(0,163,255,0.3)] mb-4 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#A3FF12] to-[#8BE600] flex-shrink-0 shadow-[0_0_30px_rgba(0,163,255,0.3)] mb-4 flex items-center justify-center">
             <Lock className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-2xl font-bold tracking-wide text-white">Holo Workspace</h1>
@@ -44,7 +44,7 @@ export function Login({ onLogin }: Props) {
               required
               value={username}
               onChange={e => setUsername(e.target.value)}
-              className="w-full bg-[#0A0A0A] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00A3FF] transition-colors" 
+              className="w-full bg-[#0A0A0A] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#A3FF12] transition-colors" 
               placeholder="Ex: gabriel.workspace" 
             />
           </div>
@@ -55,7 +55,7 @@ export function Login({ onLogin }: Props) {
               required
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full bg-[#0A0A0A] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00A3FF] transition-colors" 
+              className="w-full bg-[#0A0A0A] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#A3FF12] transition-colors" 
               placeholder="••••••••" 
             />
           </div>

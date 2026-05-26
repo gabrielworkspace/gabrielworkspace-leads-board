@@ -18,7 +18,7 @@ export function QuickStats({ metrics, onEditMetrics, onEditAds }: { metrics: Dai
       <div className="flex flex-col items-center justify-center mb-8">
         <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-2">Aguardando</span>
         <h2 className="text-4xl font-light text-white tabular-nums tracking-wider">R$ {latest.lpRevenue.toLocaleString('en-US')}</h2>
-        <button className="flex items-center gap-2 text-[#00A3FF] text-xs font-semibold mt-4 hover:opacity-80 transition-opacity">
+        <button className="flex items-center gap-2 text-[#A3FF12] text-xs font-semibold mt-4 hover:opacity-80 transition-opacity">
           <Play size={14} fill="currentColor" /> Iniciar Rastreador de Receita
         </button>
       </div>
@@ -28,8 +28,8 @@ export function QuickStats({ metrics, onEditMetrics, onEditAds }: { metrics: Dai
         
         <div className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors group">
            <div className="flex items-center gap-3">
-             <div className="w-8 h-8 rounded-full bg-[#00A3FF]/10 flex items-center justify-center">
-               <span className="w-3 h-3 bg-[#00A3FF] rounded-sm"></span>
+             <div className="w-8 h-8 rounded-full bg-[#A3FF12]/10 flex items-center justify-center">
+               <span className="w-3 h-3 bg-[#A3FF12] rounded-sm"></span>
              </div>
              <div className="flex flex-col">
                <span className="text-xs text-gray-200 font-medium">Mensagens Enviadas</span>

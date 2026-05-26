@@ -69,7 +69,7 @@ export function Projects({ userId }: Props) {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[500px]">
-        <Loader2 className="w-8 h-8 text-[#00A3FF] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#A3FF12] animate-spin" />
       </div>
     );
   }
@@ -123,7 +123,7 @@ export function Projects({ userId }: Props) {
           const columnProjects = projects.filter(p => p.status === status);
           
           let headerColor = "text-gray-400 border-gray-400/20";
-          if (status === 'Em Andamento') headerColor = "text-[#00A3FF] border-[#00A3FF]/20";
+          if (status === 'Em Andamento') headerColor = "text-[#A3FF12] border-[#A3FF12]/20";
           if (status === 'Concluído') headerColor = "text-[#10B981] border-[#10B981]/20";
 
           return (
