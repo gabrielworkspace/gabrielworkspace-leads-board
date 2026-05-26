@@ -1,4 +1,4 @@
-import { LayoutDashboard, Clock, CheckSquare, Layers, Trophy, Calendar, Sparkles, BarChart3, LogOut } from 'lucide-react';
+import { LayoutDashboard, Clock, CheckSquare, Layers, Trophy, Calendar, LogOut } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface Props {
@@ -12,15 +12,10 @@ export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) 
   const mainItems = [
     { icon: <LayoutDashboard size={18} />, label: 'Visão Geral' },
     { icon: <Clock size={18} />, label: 'Métricas de Tempo' },
-    { icon: <CheckSquare size={18} />, label: 'Minhas Tarefas' },
+    { icon: <CheckSquare size={18} />, label: 'Tarefas Diárias' },
     { icon: <Layers size={18} />, label: 'Projetos' },
-    { icon: <Trophy size={18} />, label: 'Ranking' },
+    { icon: <Trophy size={18} />, label: 'Melhores Dias' },
     { icon: <Calendar size={18} />, label: 'Planejamento' },
-  ];
-
-  const otherItems = [
-    { icon: <Sparkles size={18} />, label: 'Dicas de IA' },
-    { icon: <BarChart3 size={18} />, label: 'Análises' },
   ];
 
   return (
@@ -43,27 +38,6 @@ export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) 
         <div className="space-y-1">
           <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 px-2">Principal</h3>
           {mainItems.map((item, i) => {
-            const isActive = activeView === item.label;
-            return (
-              <div 
-                key={i} 
-                onClick={() => setActiveView(item.label)}
-                className={clsx(
-                  "nav-item text-sm px-3 py-2.5 rounded-xl cursor-pointer transition-all flex items-center gap-3", 
-                  isActive ? "bg-gradient-to-r from-[#00A3FF] to-[#0055FF] text-white shadow-[0_0_15px_rgba(0,163,255,0.3)] font-semibold" : "text-gray-400 hover:text-white hover:bg-white/5"
-                )}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Other Section */}
-        <div className="space-y-1">
-          <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 px-2">Outros</h3>
-          {otherItems.map((item, i) => {
             const isActive = activeView === item.label;
             return (
               <div 

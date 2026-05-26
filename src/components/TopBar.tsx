@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Calendar, Sparkles, MessageSquare, Bell, Menu } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, MessageSquare, Bell, Menu } from 'lucide-react';
 import profilePic from '../../img/WhatsApp Image 2026-05-22 at 14.11.20(1).jpeg';
 
 interface Props {
@@ -46,10 +46,6 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar }: Props) {
              <button className="px-3 hover:bg-white/5 rounded-r-xl h-full flex items-center text-gray-400"><ChevronRight size={16}/></button>
            </div>
            
-           <button className="btn-primary flex-1 lg:flex-none text-xs px-4 h-10 flex items-center justify-center gap-2 hidden sm:flex">
-             <Sparkles size={14} /> Testar Previsão
-           </button>
-           
            <div className="hidden lg:flex items-center gap-2 ml-4">
              <button className="w-10 h-10 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors"><MessageSquare size={16}/></button>
              <button className="w-10 h-10 rounded-xl bg-[#121212] border border-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors relative">
@@ -63,7 +59,7 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar }: Props) {
       
       <div>
          <h2 className="text-3xl font-normal text-white mb-2 tracking-wide">Bem-vindo de volta, <span className="font-bold">Gabriel!</span></h2>
-         <p className="text-gray-400 text-sm">Seu dia está calibrado. A IA ajustou suas próximas ações.</p>
+         <p className="text-gray-400 text-sm">Pronto para bater as metas de hoje?</p>
       </div>
     </header>
   );

@@ -7,6 +7,10 @@ import { DailySummary } from './components/DailySummary';
 import { LeadsTable } from './components/LeadsTable';
 import { DataEntryModal } from './components/DataEntryModal';
 import { Login } from './components/Login';
+import { DailyTasks } from './components/DailyTasks';
+import { BestDays } from './components/BestDays';
+import { Planner } from './components/Planner';
+import { Projects } from './components/Projects';
 import { Plus } from 'lucide-react';
 import { useDashboardData } from './hooks/useDashboardData';
 import {
@@ -105,6 +109,14 @@ function App() {
               </div>
 
             </div>
+          ) : activeView === 'Tarefas Diárias' ? (
+            <DailyTasks />
+          ) : activeView === 'Melhores Dias' ? (
+            <BestDays />
+          ) : activeView === 'Planejamento' ? (
+            <Planner />
+          ) : activeView === 'Projetos' ? (
+            <Projects />
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center holo-panel p-10 min-h-[500px]">
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#00A3FF]/20 to-[#0055FF]/20 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,163,255,0.1)]">
