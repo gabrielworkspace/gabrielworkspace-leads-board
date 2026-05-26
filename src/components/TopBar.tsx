@@ -23,6 +23,21 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport 
     onOpenReport();
   };
 
+  const filterOptions = ['1', '7', '30', 'all'];
+  const currentFilterIndex = filterOptions.indexOf(dateFilter);
+
+  const handlePrevFilter = () => {
+    if (currentFilterIndex > 0) {
+      setDateFilter(filterOptions[currentFilterIndex - 1]);
+    }
+  };
+
+  const handleNextFilter = () => {
+    if (currentFilterIndex < filterOptions.length - 1) {
+      setDateFilter(filterOptions[currentFilterIndex + 1]);
+    }
+  };
+
   return (
     <header className="flex flex-col gap-6 lg:gap-8 mb-6 lg:mb-8 mt-2">
       <div className="flex flex-col lg:flex-row justify-between lg:items-center w-full gap-4">
@@ -48,16 +63,27 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport 
          <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
            {/* Date Filter disguised as a range picker */}
            <div className="flex-1 lg:flex-none flex items-center bg-[#121212] border border-white/5 rounded-xl h-10">
-             <button className="px-3 hover:bg-white/5 rounded-l-xl h-full flex items-center text-gray-400"><ChevronLeft size={16}/></button>
+             <button 
+               onClick={handlePrevFilter}
+               disabled={currentFilterIndex <= 0}
+               className={`px-3 hover:bg-white/5 rounded-l-xl h-full flex items-center ${currentFilterIndex <= 0 ? 'text-gray-600 cursor-not-allowed' : 'text-gray-400'}`}>
+               <ChevronLeft size={16}/>
+             </button>
              <div className="flex items-center justify-center gap-2 px-3 border-x border-white/5 h-full flex-1">
                 <Calendar size={14} className="text-gray-400"/>
                 <select value={dateFilter} onChange={e => setDateFilter(e.target.value)} className="bg-transparent text-xs font-medium text-white outline-none cursor-pointer appearance-none text-center">
-                  <option value="30" className="bg-[#121212]">Últimos 30 Dias</option>
+                  <option value="1" className="bg-[#121212]">Hoje</option>
                   <option value="7" className="bg-[#121212]">Últimos 7 Dias</option>
+                  <option value="30" className="bg-[#121212]">Últimos 30 Dias</option>
                   <option value="all" className="bg-[#121212]">Todo o Período</option>
                 </select>
              </div>
-             <button className="px-3 hover:bg-white/5 rounded-r-xl h-full flex items-center text-gray-400"><ChevronRight size={16}/></button>
+             <button 
+               onClick={handleNextFilter}
+               disabled={currentFilterIndex >= filterOptions.length - 1}
+               className={`px-3 hover:bg-white/5 rounded-r-xl h-full flex items-center ${currentFilterIndex >= filterOptions.length - 1 ? 'text-gray-600 cursor-not-allowed' : 'text-gray-400'}`}>
+               <ChevronRight size={16}/>
+             </button>
            </div>
            
            <div className="hidden lg:flex items-center gap-2 ml-4">

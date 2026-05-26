@@ -4,7 +4,7 @@ import type { DailyMetrics } from '../types';
 
 export function ProgressChart({ metrics }: { metrics: DailyMetrics[] }) {
   const chartData = {
-    labels: metrics.map(m => m.date.substring(0,3)),
+    labels: metrics.map(m => parseInt(m.date.split('-')[2]).toString()),
     datasets: [
       {
         label: 'Net Profit (R$)',

@@ -110,11 +110,27 @@ export function useDashboardData(userId: string | null) {
       name: leadData.name,
       status: leadData.status,
       value: leadData.value,
-      promisedate: leadData.promiseDate
+      promisedate: leadData.promiseDate,
+      observations: leadData.observations
     };
     const { data } = await supabase.from('leads').insert([dbPayload]).select().single();
     if (data) {
       setLeads(prev => [{ ...data, promiseDate: data.promisedate }, ...prev]);
+    }
+  };
+
+  const updateLead = async (id: string, leadData: Partial<Lead>) => {
+    if (!userId) return;
+    const dbPayload: any = {};
+    if (leadData.name !== undefined) dbPayload.name = leadData.name;
+    if (leadData.status !== undefined) dbPayload.status = leadData.status;
+    if (leadData.value !== undefined) dbPayload.value = leadData.value;
+    if (leadData.promiseDate !== undefined) dbPayload.promisedate = leadData.promiseDate;
+    if (leadData.observations !== undefined) dbPayload.observations = leadData.observations;
+
+    const { data } = await supabase.from('leads').update(dbPayload).eq('id', id).eq('user_id', userId).select().single();
+    if (data) {
+      setLeads(prev => prev.map(l => l.id === id ? { ...data, promiseDate: data.promisedate } : l));
     }
   };
 
@@ -139,5 +155,5 @@ export function useDashboardData(userId: string | null) {
     setMetrics(paddedMetrics);
   };
 
-  return { metrics, leads, updateTodayMetrics, addLead, removeLead, clearData, loading };
+  return { metrics, leads, updateTodayMetrics, addLead, updateLead, removeLead, clearData, loading };
 }

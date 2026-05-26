@@ -42,7 +42,7 @@ ChartJS.register(
 
 function App() {
   const [activeView, setActiveView] = useState('Visão Geral');
-  const [dateFilter, setDateFilter] = useState('30');
+  const [dateFilter, setDateFilter] = useState('1');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [modalInitialTab, setModalInitialTab] = useState<'outreach' | 'financial' | 'leads' | 'settings'>('outreach');

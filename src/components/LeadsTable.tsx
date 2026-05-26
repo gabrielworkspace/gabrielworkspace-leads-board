@@ -4,9 +4,10 @@ import type { Lead } from '../types';
 interface Props {
   leads: Lead[];
   onRemoveLead: (id: string) => void;
+  onEditLead?: (lead: Lead) => void;
 }
 
-export function LeadsTable({ leads, onRemoveLead }: Props) {
+export function LeadsTable({ leads, onRemoveLead, onEditLead }: Props) {
   return (
     <div className="holo-panel p-6 flex flex-col min-h-[300px]">
       <div className="flex items-center gap-2 mb-6">
@@ -69,13 +70,10 @@ export function LeadsTable({ leads, onRemoveLead }: Props) {
                   </span>
                 </td>
                 <td className="py-4 px-4 flex justify-end gap-2">
-                  <button className="w-8 h-8 rounded-full bg-[#121212] border border-white/5 flex items-center justify-center hover:bg-white/10 text-gray-400 hover:text-white transition-colors">
-                    <Play size={12} fill="currentColor" />
-                  </button>
                   <button onClick={() => onRemoveLead(lead.id)} className="w-8 h-8 rounded-full bg-[#121212] border border-white/5 flex items-center justify-center hover:bg-red-500/20 text-gray-400 hover:text-red-500 transition-colors">
                     <Trash2 size={14} />
                   </button>
-                  <button className="w-8 h-8 rounded-full bg-[#121212] border border-white/5 flex items-center justify-center hover:bg-white/10 text-gray-400 hover:text-white transition-colors">
+                  <button onClick={() => onEditLead && onEditLead(lead)} className="w-8 h-8 rounded-full bg-[#121212] border border-white/5 flex items-center justify-center hover:bg-white/10 text-gray-400 hover:text-white transition-colors">
                     <MoreHorizontal size={14} />
                   </button>
                 </td>
