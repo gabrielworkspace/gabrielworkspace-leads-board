@@ -15,6 +15,7 @@ import { Planner } from './components/Planner';
 import { Projects } from './components/Projects';
 import { Plus } from 'lucide-react';
 import { useDashboardData } from './hooks/useDashboardData';
+import type { Lead } from './types';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -50,8 +51,9 @@ function App() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(() => {
     return localStorage.getItem('@NexusBoard:userId');
   });
+  const [editingLead, setEditingLead] = useState<Lead | null>(null);
 
-  const { metrics, leads, updateTodayMetrics, addLead, removeLead, clearData, loading } = useDashboardData(currentUserId);
+  const { metrics, leads, updateTodayMetrics, addLead, updateLead, removeLead, clearData, loading } = useDashboardData(currentUserId);
 
   const handleLogin = (userId: string) => {
     setCurrentUserId(userId);
@@ -65,6 +67,13 @@ function App() {
 
   const openModal = (tab: 'outreach' | 'financial' | 'leads' | 'settings' = 'outreach') => {
     setModalInitialTab(tab);
+    setEditingLead(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEditLead = (lead: Lead) => {
+    setEditingLead(lead);
+    setModalInitialTab('leads');
     setIsModalOpen(true);
   };
 
@@ -149,7 +158,7 @@ function App() {
               
               {/* BOTTOM GRID: Table */}
               <div className="w-full overflow-hidden">
-                <LeadsTable leads={filteredLeads} onRemoveLead={removeLead} />
+                <LeadsTable leads={filteredLeads} onRemoveLead={removeLead} onEditLead={handleEditLead} />
               </div>
 
             </div>
@@ -188,10 +197,15 @@ function App() {
 
       <DataEntryModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingLead(null);
+        }} 
         currentMetrics={metrics[metrics.length - 1]}
         onSaveMetrics={updateTodayMetrics}
         onAddLead={addLead}
+        onUpdateLead={updateLead}
+        editingLead={editingLead}
         onClearData={clearData}
         initialTab={modalInitialTab}
       />

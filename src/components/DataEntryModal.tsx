@@ -1,19 +1,21 @@
 import { X, Save, Trash2, PlusCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import type { DailyMetrics, LeadStatus } from '../types';
+import type { DailyMetrics, LeadStatus, Lead } from '../types';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   currentMetrics: DailyMetrics | undefined;
   onSaveMetrics: (data: Partial<DailyMetrics>, isIncremental?: boolean) => void;
-  onAddLead: (lead: { name: string; status: LeadStatus; value?: number; promiseDate?: string }) => void;
+  onAddLead: (lead: Omit<Lead, 'id'>) => void;
+  onUpdateLead?: (id: string, lead: Partial<Lead>) => void;
+  editingLead?: Lead | null;
   onClearData: () => void;
   initialTab?: 'outreach' | 'financial' | 'leads' | 'settings';
 }
 
-export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics, onAddLead, onClearData, initialTab = 'outreach' }: Props) {
+export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics, onAddLead, onUpdateLead, editingLead, onClearData, initialTab = 'outreach' }: Props) {
   const [tab, setTab] = useState<'outreach' | 'financial' | 'leads' | 'settings'>('outreach');
   
   const [metricsForm, setMetricsForm] = useState({
@@ -28,6 +30,7 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
     status: 'Replied' as LeadStatus,
     value: '',
     promiseDate: '',
+    observations: '',
   });
 
   useEffect(() => {
@@ -42,9 +45,22 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
       } else {
         setMetricsForm({ messagesSent: '', messagesReplied: '', adSpend: '', lpRevenue: '' });
       }
+
+      if (editingLead) {
+        setLeadForm({
+          name: editingLead.name,
+          status: editingLead.status,
+          value: editingLead.value?.toString() || '',
+          promiseDate: editingLead.promiseDate || '',
+          observations: editingLead.observations || '',
+        });
+      } else {
+        setLeadForm({ name: '', status: 'Replied', value: '', promiseDate: '', observations: '' });
+      }
+
       setTab(initialTab);
     }
-  }, [isOpen, currentMetrics, initialTab]);
+  }, [isOpen, currentMetrics, initialTab, editingLead]);
 
   const handleSaveMetrics = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,13 +75,23 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
 
   const handleAddLead = (e: React.FormEvent) => {
     e.preventDefault();
-    onAddLead({
+    const leadData = {
       name: leadForm.name,
       status: leadForm.status,
       value: leadForm.value ? Number(leadForm.value) : undefined,
       promiseDate: leadForm.status === 'Promised' ? leadForm.promiseDate : undefined,
-    });
-    setLeadForm({ name: '', status: 'Replied', value: '', promiseDate: '' });
+      observations: leadForm.observations,
+    };
+
+    if (editingLead && onUpdateLead) {
+      onUpdateLead(editingLead.id, leadData);
+    } else {
+      onAddLead(leadData);
+    }
+    setLeadForm({ name: '', status: 'Replied', value: '', promiseDate: '', observations: '' });
+    onClose();
+    setTab('outreach');
+  };
     onClose();
     setTab('outreach');
   };
@@ -186,9 +212,14 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
                   <label className="block text-xs font-medium text-gray-400 mb-1">Valor Fechado (R$) - Opcional</label>
                   <input type="number" value={leadForm.value} onChange={e => setLeadForm({...leadForm, value: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: 500" />
                 </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1">Observações (Opcional)</label>
+                  <textarea value={leadForm.observations} onChange={e => setLeadForm({...leadForm, observations: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm min-h-[80px]" placeholder="Anotações sobre o lead..."></textarea>
+                </div>
                 <div className="pt-4">
                   <button type="submit" className="w-full btn-primary flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,163,255,0.4)]">
-                    <PlusCircle className="w-4 h-4" /> Adicionar Lead
+                    {editingLead ? <Save className="w-4 h-4" /> : <PlusCircle className="w-4 h-4" />}
+                    {editingLead ? 'Salvar Alterações' : 'Adicionar Lead'}
                   </button>
                 </div>
               </form>
