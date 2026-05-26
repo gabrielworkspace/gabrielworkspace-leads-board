@@ -1,14 +1,20 @@
 import { Bar } from 'react-chartjs-2';
 import { Zap, ArrowUpRight } from 'lucide-react';
-import type { DailyMetrics } from '../types';
+import type { DailyMetrics, Lead } from '../types';
 
-export function ProgressChart({ metrics }: { metrics: DailyMetrics[] }) {
+export function ProgressChart({ metrics, leads = [] }: { metrics: DailyMetrics[], leads?: Lead[] }) {
   const chartData = {
     labels: metrics.map(m => parseInt(m.date.split('-')[2]).toString()),
     datasets: [
       {
         label: 'Net Profit (R$)',
-        data: metrics.map(m => m.lpRevenue - m.adSpend),
+        data: metrics.map(m => {
+          const dayLeads = leads.filter(l => l.created_at && l.created_at.startsWith(m.date));
+          const dayOrganicRevenue = dayLeads
+            .filter(l => l.status === 'Closed' && l.value)
+            .reduce((sum, l) => sum + (l.value || 0), 0);
+          return m.lpRevenue + dayOrganicRevenue - m.adSpend;
+        }),
         backgroundColor: metrics.map((_, i) => i === metrics.length - 1 ? '#00A3FF' : '#ffffff'),
         borderRadius: 4,
         barThickness: 8,
@@ -26,7 +32,20 @@ export function ProgressChart({ metrics }: { metrics: DailyMetrics[] }) {
     }
   };
 
-  const totalProfit = metrics.reduce((acc, m) => acc + (m.lpRevenue - m.adSpend), 0);
+  const totalOrganicRevenue = leads
+    .filter(l => l.status === 'Closed' && l.value)
+    .reduce((sum, lead) => sum + (lead.value || 0), 0);
+  const totalLpRevenue = metrics.reduce((acc, m) => acc + m.lpRevenue, 0);
+  const totalAdSpend = metrics.reduce((acc, m) => acc + m.adSpend, 0);
+  
+  const totalProfit = totalLpRevenue + totalOrganicRevenue - totalAdSpend;
+
+  const todayMetrics = metrics[metrics.length - 1] || { lpRevenue: 0, adSpend: 0, date: new Date().toISOString().split('T')[0] };
+  const todayLeads = leads.filter(l => l.created_at && l.created_at.startsWith(todayMetrics.date));
+  const todayOrganicRevenue = todayLeads
+    .filter(l => l.status === 'Closed' && l.value)
+    .reduce((sum, l) => sum + (l.value || 0), 0);
+  const todayProfit = todayMetrics.lpRevenue + todayOrganicRevenue - todayMetrics.adSpend;
 
   return (
     <div className="holo-panel p-6 flex flex-col h-[340px] relative">
@@ -50,7 +69,7 @@ export function ProgressChart({ metrics }: { metrics: DailyMetrics[] }) {
          {/* Green tooltip simulator like the screenshot */}
          <div className="absolute right-0 top-1/2 -translate-y-4 bg-white/10 backdrop-blur-md border border-white/10 px-3 py-2 rounded-xl flex items-center justify-center flex-col shadow-lg">
             <span className="text-white font-bold text-xs">Hoje</span>
-            <span className="text-[9px] text-[#00A3FF] font-medium">+R$ {metrics[metrics.length-1]?.lpRevenue}</span>
+            <span className="text-[9px] text-[#00A3FF] font-medium">{todayProfit >= 0 ? '+' : ''}R$ {todayProfit.toLocaleString('en-US')}</span>
          </div>
       </div>
     </div>

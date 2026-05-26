@@ -9,6 +9,8 @@ interface ComparisonData {
     messagesReplied: number;
     adSpend: number;
     lpRevenue: number;
+    organicRevenue: number;
+    profit: number;
     leadsCount: number;
   };
   matheus: {
@@ -16,6 +18,8 @@ interface ComparisonData {
     messagesReplied: number;
     adSpend: number;
     lpRevenue: number;
+    organicRevenue: number;
+    profit: number;
     leadsCount: number;
   };
 }
@@ -23,8 +27,8 @@ interface ComparisonData {
 export function DumpComparison() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<ComparisonData>({
-    gabriel: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, leadsCount: 0 },
-    matheus: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, leadsCount: 0 }
+    gabriel: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, organicRevenue: 0, profit: 0, leadsCount: 0 },
+    matheus: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, organicRevenue: 0, profit: 0, leadsCount: 0 }
   });
 
   useEffect(() => {
@@ -41,12 +45,12 @@ export function DumpComparison() {
 
       const { data: leadsData } = await supabase
         .from('leads')
-        .select('user_id')
+        .select('user_id, status, value')
         .in('user_id', ['gabriel', 'matheus']);
 
       const result: ComparisonData = {
-        gabriel: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, leadsCount: 0 },
-        matheus: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, leadsCount: 0 }
+        gabriel: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, organicRevenue: 0, profit: 0, leadsCount: 0 },
+        matheus: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, organicRevenue: 0, profit: 0, leadsCount: 0 }
       };
 
       if (metricsData) {
@@ -66,9 +70,18 @@ export function DumpComparison() {
           const user = l.user_id as 'gabriel' | 'matheus';
           if (result[user]) {
             result[user].leadsCount += 1;
+            if (l.status === 'Closed' && l.value) {
+              result[user].organicRevenue += l.value;
+            }
           }
         });
       }
+
+      // Calculate profit
+      ['gabriel', 'matheus'].forEach(user => {
+        const u = user as 'gabriel' | 'matheus';
+        result[u].profit = result[u].lpRevenue + result[u].organicRevenue - result[u].adSpend;
+      });
 
       setData(result);
       setLoading(false);
@@ -83,6 +96,8 @@ export function DumpComparison() {
       messagesReplied: data.gabriel.messagesReplied + data.matheus.messagesReplied,
       adSpend: data.gabriel.adSpend + data.matheus.adSpend,
       lpRevenue: data.gabriel.lpRevenue + data.matheus.lpRevenue,
+      organicRevenue: data.gabriel.organicRevenue + data.matheus.organicRevenue,
+      profit: data.gabriel.profit + data.matheus.profit,
       leadsCount: data.gabriel.leadsCount + data.matheus.leadsCount,
     };
   }, [data]);
@@ -91,8 +106,8 @@ export function DumpComparison() {
     labels: ['Gabriel', 'Matheus'],
     datasets: [
       {
-        label: 'Receita (R$)',
-        data: [data.gabriel.lpRevenue, data.matheus.lpRevenue],
+        label: 'Lucro (R$)',
+        data: [data.gabriel.profit, data.matheus.profit],
         backgroundColor: ['rgba(255, 107, 0, 0.8)', 'rgba(204, 85, 0, 0.8)'],
         borderColor: ['#FF6B00', '#CC5500'],
         borderWidth: 1,
@@ -138,14 +153,24 @@ export function DumpComparison() {
       </div>
 
       {/* SUM SECTION */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="holo-panel p-6 flex flex-col">
+          <div className="flex items-center gap-3 mb-2">
+            <TrendingUp className="w-5 h-5 text-[#FF6B00]" />
+            <h3 className="text-gray-400 text-sm font-medium">Lucro Total (Soma)</h3>
+          </div>
+          <p className="text-3xl font-bold text-white">
+            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(total.profit)}
+          </p>
+        </div>
+
         <div className="holo-panel p-6 flex flex-col">
           <div className="flex items-center gap-3 mb-2">
             <DollarSign className="w-5 h-5 text-[#FF6B00]" />
             <h3 className="text-gray-400 text-sm font-medium">Faturamento Total (Soma)</h3>
           </div>
           <p className="text-3xl font-bold text-white">
-            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(total.lpRevenue)}
+            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(total.lpRevenue + total.organicRevenue)}
           </p>
         </div>
 
@@ -179,7 +204,7 @@ export function DumpComparison() {
       {/* COMPARISON SECTION */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
         <div className="holo-panel p-6">
-          <h3 className="text-lg font-semibold text-white mb-6">Comparativo de Receita</h3>
+          <h3 className="text-lg font-semibold text-white mb-6">Comparativo de Lucro</h3>
           <div className="h-64 flex justify-center">
             <Bar data={chartData} options={chartOptions} />
           </div>
@@ -192,8 +217,9 @@ export function DumpComparison() {
             <div className="bg-[#1A1A1A] rounded-xl p-4 border border-white/5">
               <h4 className="text-[#FF6B00] font-bold mb-3">Gabriel</h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div><span className="text-gray-400">Receita:</span> <span className="text-white font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.gabriel.lpRevenue)}</span></div>
-                <div><span className="text-gray-400">Gasto Ads:</span> <span className="text-white font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.gabriel.adSpend)}</span></div>
+                <div><span className="text-gray-400">Lucro:</span> <span className="text-[#10B981] font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.gabriel.profit)}</span></div>
+                <div><span className="text-gray-400">Receita Total:</span> <span className="text-white font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.gabriel.lpRevenue + data.gabriel.organicRevenue)}</span></div>
+                <div><span className="text-gray-400">Gasto Ads:</span> <span className="text-[#EF4444] font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.gabriel.adSpend)}</span></div>
                 <div><span className="text-gray-400">Msgs Env:</span> <span className="text-white font-medium">{data.gabriel.messagesSent}</span></div>
                 <div><span className="text-gray-400">Leads:</span> <span className="text-white font-medium">{data.gabriel.leadsCount}</span></div>
               </div>
@@ -202,8 +228,9 @@ export function DumpComparison() {
             <div className="bg-[#1A1A1A] rounded-xl p-4 border border-white/5">
               <h4 className="text-[#FF6B00] font-bold mb-3">Matheus</h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div><span className="text-gray-400">Receita:</span> <span className="text-white font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.matheus.lpRevenue)}</span></div>
-                <div><span className="text-gray-400">Gasto Ads:</span> <span className="text-white font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.matheus.adSpend)}</span></div>
+                <div><span className="text-gray-400">Lucro:</span> <span className="text-[#10B981] font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.matheus.profit)}</span></div>
+                <div><span className="text-gray-400">Receita Total:</span> <span className="text-white font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.matheus.lpRevenue + data.matheus.organicRevenue)}</span></div>
+                <div><span className="text-gray-400">Gasto Ads:</span> <span className="text-[#EF4444] font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.matheus.adSpend)}</span></div>
                 <div><span className="text-gray-400">Msgs Env:</span> <span className="text-white font-medium">{data.matheus.messagesSent}</span></div>
                 <div><span className="text-gray-400">Leads:</span> <span className="text-white font-medium">{data.matheus.leadsCount}</span></div>
               </div>

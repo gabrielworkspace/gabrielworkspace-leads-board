@@ -147,7 +147,7 @@ function App() {
               
               {/* TOP GRID: 3 Columns */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-                <ProgressChart metrics={filteredMetrics} />
+                <ProgressChart metrics={filteredMetrics} leads={filteredLeads} />
                 <QuickStats metrics={filteredMetrics} onEditMetrics={() => openModal('outreach')} onEditAds={() => openModal('financial')} />
                 <DailySummary metrics={filteredMetrics} leads={filteredLeads} />
               </div>
