@@ -127,7 +127,7 @@ function App() {
   }
 
   return (
-    <div className="h-screen w-screen flex relative overflow-hidden bg-[#050505] justify-center">
+    <div className="h-[100dvh] w-screen flex relative overflow-hidden bg-[#050505] justify-center">
       <div className="flex w-full max-w-[1920px] mx-auto bg-transparent">
         <Sidebar activeView={activeView} setActiveView={(v) => { setActiveView(v); setIsMobileMenuOpen(false); }} onLogout={handleLogout} isOpen={isMobileMenuOpen} />
 
@@ -139,7 +139,7 @@ function App() {
           />
         )}
 
-        <main className="flex-1 h-screen overflow-y-auto p-4 lg:p-10 flex flex-col relative z-10 no-scrollbar w-full">
+        <main className="flex-1 h-[100dvh] overflow-y-auto p-4 pt-8 lg:p-10 flex flex-col relative z-10 no-scrollbar w-full">
           <TopBar dateFilter={dateFilter} setDateFilter={setDateFilter} onOpenSidebar={() => setIsMobileMenuOpen(true)} onOpenReport={() => setIsReportModalOpen(true)} activeView={activeView} />
           
           {activeView === 'Visão Geral' ? (

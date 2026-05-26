@@ -110,8 +110,7 @@ export function useDashboardData(userId: string | null) {
       name: leadData.name,
       status: leadData.status,
       value: leadData.value,
-      promisedate: leadData.promiseDate,
-      observations: leadData.observations
+      promisedate: leadData.promiseDate
     };
     const { data } = await supabase.from('leads').insert([dbPayload]).select().single();
     if (data) {
@@ -126,7 +125,6 @@ export function useDashboardData(userId: string | null) {
     if (leadData.status !== undefined) dbPayload.status = leadData.status;
     if (leadData.value !== undefined) dbPayload.value = leadData.value;
     if (leadData.promiseDate !== undefined) dbPayload.promisedate = leadData.promiseDate;
-    if (leadData.observations !== undefined) dbPayload.observations = leadData.observations;
 
     const { data } = await supabase.from('leads').update(dbPayload).eq('id', id).eq('user_id', userId).select().single();
     if (data) {

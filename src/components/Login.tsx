@@ -25,7 +25,7 @@ export function Login({ onLogin }: Props) {
   };
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-[#050505] relative overflow-hidden">
+    <div className="h-[100dvh] w-screen flex items-center justify-center bg-[#050505] relative overflow-hidden">
       
       <div className="w-full max-w-md holo-panel p-10 z-10 relative">
         <div className="flex flex-col items-center mb-8">

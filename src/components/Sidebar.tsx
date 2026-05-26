@@ -21,7 +21,7 @@ export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) 
 
   return (
     <aside className={clsx(
-      "w-[240px] flex flex-col h-screen py-6 px-4 fixed lg:sticky top-0 left-0 border-r border-white/5 bg-[#0A0A0A] z-40 transition-transform duration-300",
+      "w-[240px] flex flex-col h-[100dvh] pt-12 pb-6 lg:py-6 px-4 fixed lg:sticky top-0 left-0 border-r border-white/5 bg-[#0A0A0A] z-40 transition-transform duration-300",
       isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
     )}>
       {/* Logo */}
