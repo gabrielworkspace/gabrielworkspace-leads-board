@@ -25,11 +25,6 @@ export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) 
     )}>
       {/* Logo */}
       <div className="flex items-center gap-3 mb-10 px-2">
-        <div className="w-8 h-8 flex-shrink-0 bg-white rounded-md flex items-center justify-center transform -skew-x-12">
-           <div className="w-4 h-4 bg-black transform skew-x-12 flex items-center justify-center">
-             <div className="w-1.5 h-1.5 bg-white"></div>
-           </div>
-        </div>
         <h1 className="text-xl font-bold tracking-wide text-white">Gabriel Workspace</h1>
       </div>
 

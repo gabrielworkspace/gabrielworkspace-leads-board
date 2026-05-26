@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { TrendingUp, ArrowUpRight, ArrowDownRight, Award, Activity } from 'lucide-react';
 import { Line } from 'react-chartjs-2';
 import type { ChartData } from 'chart.js';
+import dumpLogo from '../../img/logodump_laranja.svg';
 
 interface ComparisonData {
   gabriel: {
@@ -244,8 +245,8 @@ export function DumpComparison() {
     <div className="flex flex-col gap-6 w-full pb-20">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#FF8A00]/20 to-[#FF5500]/20 border border-[#FF8A00]/30 flex items-center justify-center shadow-[0_0_20px_rgba(0,229,255,0.15)]">
-            <Activity className="w-6 h-6 text-[#FF8A00]" />
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center">
+            <img src={dumpLogo} alt="Dump Logo" className="w-10 h-10 object-contain" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-white tracking-wide">Desempenho da Agência</h1>
