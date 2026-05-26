@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import type { DailyMetrics, Lead, LeadStatus } from '../types';
+import type { DailyMetrics, Lead } from '../types';
 
 export function useDashboardData() {
   const [metrics, setMetrics] = useState<DailyMetrics[]>([]);
@@ -75,7 +75,7 @@ export function useDashboardData() {
 
   const addLead = async (leadData: Omit<Lead, 'id'>) => {
     // Insere no Supabase e recebe o objeto criado com o ID gerado pelo banco
-    const { data, error } = await supabase.from('leads').insert([leadData]).select().single();
+    const { data } = await supabase.from('leads').insert([leadData]).select().single();
     if (data) {
       setLeads(prev => [data, ...prev]);
     }

@@ -1,5 +1,4 @@
 export interface DailyMetrics {
-  day: number;
   date: string;
   lpRevenue: number;
   adSpend: number;
