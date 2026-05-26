@@ -140,7 +140,7 @@ function App() {
         )}
 
         <main className="flex-1 h-[100dvh] overflow-y-auto p-4 pt-8 lg:p-10 flex flex-col relative z-10 no-scrollbar w-full">
-          <TopBar dateFilter={dateFilter} setDateFilter={setDateFilter} onOpenSidebar={() => setIsMobileMenuOpen(true)} onOpenReport={() => setIsReportModalOpen(true)} activeView={activeView} />
+          <TopBar userId={currentUserId} dateFilter={dateFilter} setDateFilter={setDateFilter} onOpenSidebar={() => setIsMobileMenuOpen(true)} onOpenReport={() => setIsReportModalOpen(true)} activeView={activeView} />
           
           {activeView === 'Visão Geral' ? (
             <div className="flex flex-col gap-6 pb-20 w-full">

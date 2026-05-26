@@ -7,9 +7,11 @@ interface Props {
   onOpenSidebar?: () => void;
   onOpenReport: () => void;
   activeView?: string;
+  userId?: string | null;
 }
 
-export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport, activeView }: Props) {
+export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport, activeView, userId }: Props) {
+  const displayName = userId === 'mateus' ? 'Mateus' : 'Gabriel';
   const now = new Date();
   const todayStr = now.toISOString().split('T')[0];
   const isAfter10PM = now.getHours() >= 22;
@@ -104,7 +106,7 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport,
       </div>
       
       <div>
-         <h2 className="text-3xl font-normal text-white mb-2 tracking-wide">Bem-vindo de volta, <span className="font-bold">Gabriel!</span></h2>
+         <h2 className="text-3xl font-normal text-white mb-2 tracking-wide">Bem-vindo de volta, <span className="font-bold">{displayName}!</span></h2>
          <p className="text-gray-400 text-sm">Pronto para bater as metas de hoje?</p>
       </div>
     </header>
