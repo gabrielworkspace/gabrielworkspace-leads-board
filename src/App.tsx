@@ -35,15 +35,14 @@ ChartJS.register(
 );
 
 function App() {
+  const [activeView, setActiveView] = useState('Visão Geral');
+  const [dateFilter, setDateFilter] = useState('30');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { metrics, leads, updateTodayMetrics, addLead, removeLead, clearData, loading } = useDashboardData();
+  
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem('@NexusBoard:auth') === 'true';
   });
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeView, setActiveView] = useState('Visão Geral');
-  const [dateFilter, setDateFilter] = useState('30');
-  
-  const { metrics, leads, updateTodayMetrics, addLead, removeLead, clearData } = useDashboardData();
 
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -63,6 +62,14 @@ function App() {
 
   if (!isAuthenticated) {
     return <Login onLogin={handleLogin} />;
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen w-screen bg-[#050505] flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-[#00A3FF] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   return (
