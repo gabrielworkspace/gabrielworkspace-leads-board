@@ -15,8 +15,8 @@ export function Login({ onLogin }: Props) {
     const user = username.toLowerCase().trim();
     if ((user === 'gabriel.workspace' || user === 'gabriel') && password === '12345678') {
       onLogin('gabriel');
-    } else if (user === 'mateus' && password === '12345678') {
-      onLogin('mateus');
+    } else if (user === 'matheus' && password === '12345678') {
+      onLogin('matheus');
     } else if (user === 'clarice' && password === '12345678') {
       onLogin('clarice');
     } else {

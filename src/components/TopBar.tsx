@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, Calendar, Bell, Menu } from 'lucide-react';
 import profilePic from '../../img/WhatsApp Image 2026-05-22 at 14.11.20(1).jpeg';
-import mateusPic from '../../img/WhatsApp Image 2026-05-22 at 14.31.57.jpeg';
+import matheusPic from '../../img/WhatsApp Image 2026-05-22 at 14.31.57.jpeg';
 
 interface Props {
   dateFilter: string;
@@ -12,8 +12,8 @@ interface Props {
 }
 
 export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport, activeView, userId }: Props) {
-  const displayName = userId === 'mateus' ? 'Mateus' : 'Gabriel';
-  const currentPic = userId === 'mateus' ? mateusPic : profilePic;
+  const displayName = userId === 'matheus' ? 'Matheus' : 'Gabriel';
+  const currentPic = userId === 'matheus' ? matheusPic : profilePic;
   const now = new Date();
   const todayStr = now.toISOString().split('T')[0];
   const isAfter10PM = now.getHours() >= 22;

@@ -11,7 +11,7 @@ interface ComparisonData {
     lpRevenue: number;
     leadsCount: number;
   };
-  mateus: {
+  matheus: {
     messagesSent: number;
     messagesReplied: number;
     adSpend: number;
@@ -24,7 +24,7 @@ export function DumpComparison() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<ComparisonData>({
     gabriel: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, leadsCount: 0 },
-    mateus: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, leadsCount: 0 }
+    matheus: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, leadsCount: 0 }
   });
 
   useEffect(() => {
@@ -36,22 +36,22 @@ export function DumpComparison() {
       const { data: metricsData } = await supabase
         .from('daily_metrics')
         .select('*')
-        .in('user_id', ['gabriel', 'mateus'])
+        .in('user_id', ['gabriel', 'matheus'])
         .gte('date', thirtyDaysAgo.toISOString().split('T')[0]);
 
       const { data: leadsData } = await supabase
         .from('leads')
         .select('user_id')
-        .in('user_id', ['gabriel', 'mateus']);
+        .in('user_id', ['gabriel', 'matheus']);
 
       const result: ComparisonData = {
         gabriel: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, leadsCount: 0 },
-        mateus: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, leadsCount: 0 }
+        matheus: { messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0, leadsCount: 0 }
       };
 
       if (metricsData) {
         metricsData.forEach(m => {
-          const user = m.user_id as 'gabriel' | 'mateus';
+          const user = m.user_id as 'gabriel' | 'matheus';
           if (result[user]) {
             result[user].messagesSent += (m.messagessent || 0);
             result[user].messagesReplied += (m.messagesreplied || 0);
@@ -63,7 +63,7 @@ export function DumpComparison() {
 
       if (leadsData) {
         leadsData.forEach(l => {
-          const user = l.user_id as 'gabriel' | 'mateus';
+          const user = l.user_id as 'gabriel' | 'matheus';
           if (result[user]) {
             result[user].leadsCount += 1;
           }
@@ -79,20 +79,20 @@ export function DumpComparison() {
 
   const total = useMemo(() => {
     return {
-      messagesSent: data.gabriel.messagesSent + data.mateus.messagesSent,
-      messagesReplied: data.gabriel.messagesReplied + data.mateus.messagesReplied,
-      adSpend: data.gabriel.adSpend + data.mateus.adSpend,
-      lpRevenue: data.gabriel.lpRevenue + data.mateus.lpRevenue,
-      leadsCount: data.gabriel.leadsCount + data.mateus.leadsCount,
+      messagesSent: data.gabriel.messagesSent + data.matheus.messagesSent,
+      messagesReplied: data.gabriel.messagesReplied + data.matheus.messagesReplied,
+      adSpend: data.gabriel.adSpend + data.matheus.adSpend,
+      lpRevenue: data.gabriel.lpRevenue + data.matheus.lpRevenue,
+      leadsCount: data.gabriel.leadsCount + data.matheus.leadsCount,
     };
   }, [data]);
 
   const chartData = {
-    labels: ['Gabriel', 'Mateus'],
+    labels: ['Gabriel', 'Matheus'],
     datasets: [
       {
         label: 'Receita (R$)',
-        data: [data.gabriel.lpRevenue, data.mateus.lpRevenue],
+        data: [data.gabriel.lpRevenue, data.matheus.lpRevenue],
         backgroundColor: ['rgba(255, 107, 0, 0.8)', 'rgba(204, 85, 0, 0.8)'],
         borderColor: ['#FF6B00', '#CC5500'],
         borderWidth: 1,
@@ -200,12 +200,12 @@ export function DumpComparison() {
             </div>
 
             <div className="bg-[#1A1A1A] rounded-xl p-4 border border-white/5">
-              <h4 className="text-[#FF6B00] font-bold mb-3">Mateus</h4>
+              <h4 className="text-[#FF6B00] font-bold mb-3">Matheus</h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div><span className="text-gray-400">Receita:</span> <span className="text-white font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.mateus.lpRevenue)}</span></div>
-                <div><span className="text-gray-400">Gasto Ads:</span> <span className="text-white font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.mateus.adSpend)}</span></div>
-                <div><span className="text-gray-400">Msgs Env:</span> <span className="text-white font-medium">{data.mateus.messagesSent}</span></div>
-                <div><span className="text-gray-400">Leads:</span> <span className="text-white font-medium">{data.mateus.leadsCount}</span></div>
+                <div><span className="text-gray-400">Receita:</span> <span className="text-white font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.matheus.lpRevenue)}</span></div>
+                <div><span className="text-gray-400">Gasto Ads:</span> <span className="text-white font-medium">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(data.matheus.adSpend)}</span></div>
+                <div><span className="text-gray-400">Msgs Env:</span> <span className="text-white font-medium">{data.matheus.messagesSent}</span></div>
+                <div><span className="text-gray-400">Leads:</span> <span className="text-white font-medium">{data.matheus.leadsCount}</span></div>
               </div>
             </div>
           </div>

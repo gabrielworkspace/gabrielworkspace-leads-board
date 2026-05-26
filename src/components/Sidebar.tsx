@@ -11,7 +11,6 @@ interface Props {
 export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) {
   const mainItems = [
     { icon: <LayoutDashboard size={18} />, label: 'Visão Geral' },
-    { icon: <Clock size={18} />, label: 'Métricas de Tempo' },
     { icon: <CheckSquare size={18} />, label: 'Tarefas Diárias' },
     { icon: <Layers size={18} />, label: 'Projetos' },
     { icon: <Trophy size={18} />, label: 'Melhores Dias' },
@@ -40,13 +39,18 @@ export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) 
           <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 px-2">Principal</h3>
           {mainItems.map((item, i) => {
             const isActive = activeView === item.label;
+            const isDumpItem = item.label === 'Comparação Dump';
             return (
               <div 
                 key={i} 
                 onClick={() => setActiveView(item.label)}
                 className={clsx(
                   "nav-item text-sm px-3 py-2.5 rounded-xl cursor-pointer transition-all flex items-center gap-3", 
-                  isActive ? "bg-gradient-to-r from-[#00A3FF] to-[#0055FF] text-white shadow-[0_0_15px_rgba(0,163,255,0.3)] font-semibold" : "text-gray-400 hover:text-white hover:bg-white/5"
+                  isActive 
+                    ? isDumpItem 
+                      ? "bg-gradient-to-r from-[#FF6B00] to-[#CC5500] text-white shadow-[0_0_15px_rgba(255,107,0,0.3)] font-semibold"
+                      : "bg-gradient-to-r from-[#00A3FF] to-[#0055FF] text-white shadow-[0_0_15px_rgba(0,163,255,0.3)] font-semibold" 
+                    : "text-gray-400 hover:text-white hover:bg-white/5"
                 )}
               >
                 {item.icon}
