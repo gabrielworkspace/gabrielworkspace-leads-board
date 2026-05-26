@@ -30,7 +30,7 @@ export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) 
              <div className="w-1.5 h-1.5 bg-white"></div>
            </div>
         </div>
-        <h1 className="text-xl font-bold tracking-wide text-white">Holo</h1>
+        <h1 className="text-xl font-bold tracking-wide text-white">Gabriel Workspace</h1>
       </div>
 
       <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-8 no-scrollbar">
