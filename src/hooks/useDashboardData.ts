@@ -60,17 +60,22 @@ export function useDashboardData() {
     loadData();
   }, []);
 
-  const updateTodayMetrics = async (newMetrics: Partial<DailyMetrics>) => {
+  const updateTodayMetrics = async (newMetrics: Partial<DailyMetrics>, isIncremental = false) => {
     const today = new Date().toISOString().split('T')[0];
+    const { data: existing } = await supabase.from('daily_metrics').select('*').eq('date', today).maybeSingle();
     
-    // Map camelCase to lowercase DB columns
     const dbPayload: any = {};
-    if (newMetrics.messagesSent !== undefined) dbPayload.messagessent = newMetrics.messagesSent;
-    if (newMetrics.messagesReplied !== undefined) dbPayload.messagesreplied = newMetrics.messagesReplied;
-    if (newMetrics.adSpend !== undefined) dbPayload.adspend = newMetrics.adSpend;
-    if (newMetrics.lpRevenue !== undefined) dbPayload.lprevenue = newMetrics.lpRevenue;
-    
-    const { data: existing } = await supabase.from('daily_metrics').select('id').eq('date', today).maybeSingle();
+    if (isIncremental) {
+      dbPayload.messagessent = (existing?.messagessent || 0) + (newMetrics.messagesSent || 0);
+      dbPayload.messagesreplied = (existing?.messagesreplied || 0) + (newMetrics.messagesReplied || 0);
+      dbPayload.adspend = (existing?.adspend || 0) + (newMetrics.adSpend || 0);
+      dbPayload.lprevenue = (existing?.lprevenue || 0) + (newMetrics.lpRevenue || 0);
+    } else {
+      if (newMetrics.messagesSent !== undefined) dbPayload.messagessent = newMetrics.messagesSent;
+      if (newMetrics.messagesReplied !== undefined) dbPayload.messagesreplied = newMetrics.messagesReplied;
+      if (newMetrics.adSpend !== undefined) dbPayload.adspend = newMetrics.adSpend;
+      if (newMetrics.lpRevenue !== undefined) dbPayload.lprevenue = newMetrics.lpRevenue;
+    }
     
     if (existing) {
       await supabase.from('daily_metrics').update(dbPayload).eq('id', existing.id);
@@ -82,7 +87,13 @@ export function useDashboardData() {
       const copy = [...prev];
       const last = copy[copy.length - 1];
       if (last.date === today) {
-        copy[copy.length - 1] = { ...last, ...newMetrics };
+        copy[copy.length - 1] = {
+          ...last,
+          messagesSent: dbPayload.messagessent !== undefined ? dbPayload.messagessent : last.messagesSent,
+          messagesReplied: dbPayload.messagesreplied !== undefined ? dbPayload.messagesreplied : last.messagesReplied,
+          adSpend: dbPayload.adspend !== undefined ? dbPayload.adspend : last.adSpend,
+          lpRevenue: dbPayload.lprevenue !== undefined ? dbPayload.lprevenue : last.lpRevenue,
+        };
       }
       return copy;
     });
