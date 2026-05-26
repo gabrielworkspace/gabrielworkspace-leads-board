@@ -1,0 +1,77 @@
+import { Play, MoreHorizontal, History, Trash2, CalendarClock } from 'lucide-react';
+import type { Lead } from '../types';
+
+interface Props {
+  leads: Lead[];
+  onRemoveLead: (id: string) => void;
+}
+
+export function LeadsTable({ leads, onRemoveLead }: Props) {
+  return (
+    <div className="holo-panel p-6 flex flex-col min-h-[300px]">
+      <div className="flex items-center gap-2 mb-6">
+        <History className="w-4 h-4 text-gray-400" />
+        <h3 className="text-sm font-medium text-gray-300">Histórico de Leads</h3>
+      </div>
+      
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="text-[10px] text-gray-500 uppercase tracking-widest border-b border-white/5">
+              <th className="pb-3 font-medium px-4">Nome</th>
+              <th className="pb-3 font-medium">Retorno</th>
+              <th className="pb-3 font-medium">Valor</th>
+              <th className="pb-3 font-medium">Status</th>
+              <th className="pb-3 font-medium text-right px-4">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {leads.length === 0 && (
+              <tr>
+                <td colSpan={5} className="text-center py-8 text-sm text-gray-500">Nenhum lead encontrado.</td>
+              </tr>
+            )}
+            {leads.map(lead => (
+              <tr key={lead.id} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                <td className="py-4 px-4 text-sm font-medium text-white">{lead.name}</td>
+                <td className="py-4 text-xs text-gray-400">
+                  {lead.promiseDate ? (
+                    <span className="flex items-center gap-2">
+                      <CalendarClock className="w-3 h-3 text-[#00A3FF]" /> {lead.promiseDate}
+                    </span>
+                  ) : '--'}
+                </td>
+                <td className="py-4 text-xs text-gray-300">{lead.value ? `R$ ${lead.value}` : '--'}</td>
+                <td className="py-4">
+                  <span className={`px-3 py-1 rounded-md text-[10px] font-bold tracking-wide ${
+                    lead.status === 'Replied' ? 'bg-[#3B82F6]/10 text-[#3B82F6]' :
+                    lead.status === 'Closed' ? 'bg-[#00A3FF]/10 text-[#00A3FF]' :
+                    lead.status === 'Promised' ? 'bg-[#F97316]/10 text-[#F97316]' :
+                    'bg-[#EF4444]/10 text-[#EF4444]'
+                  }`}>
+                    {
+                      lead.status === 'Replied' ? 'Respondeu' :
+                      lead.status === 'Closed' ? 'Fechou' :
+                      lead.status === 'Promised' ? 'Prometeu' : 'Ignorado'
+                    }
+                  </span>
+                </td>
+                <td className="py-4 px-4 flex justify-end gap-2">
+                  <button className="w-8 h-8 rounded-full bg-[#121212] border border-white/5 flex items-center justify-center hover:bg-white/10 text-gray-400 hover:text-white transition-colors">
+                    <Play size={12} fill="currentColor" />
+                  </button>
+                  <button onClick={() => onRemoveLead(lead.id)} className="w-8 h-8 rounded-full bg-[#121212] border border-white/5 flex items-center justify-center hover:bg-red-500/20 text-gray-400 hover:text-red-500 transition-colors">
+                    <Trash2 size={14} />
+                  </button>
+                  <button className="w-8 h-8 rounded-full bg-[#121212] border border-white/5 flex items-center justify-center hover:bg-white/10 text-gray-400 hover:text-white transition-colors">
+                    <MoreHorizontal size={14} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
