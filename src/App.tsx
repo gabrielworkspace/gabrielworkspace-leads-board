@@ -123,7 +123,7 @@ function App() {
   if (loading) {
     return (
       <div className="min-h-screen w-screen bg-[#050505] flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-[#A3FF12] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-4 border-[#00A3FF] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -177,12 +177,12 @@ function App() {
             <DumpComparison />
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center holo-panel p-10 min-h-[500px]">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#A3FF12]/20 to-[#8BE600]/20 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(163,255,18,0.15)]">
-                <span className="text-3xl text-[#A3FF12]">🚀</span>
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#00A3FF]/20 to-[#0055FF]/20 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,163,255,0.1)]">
+                <span className="text-3xl text-[#00A3FF]">🚀</span>
               </div>
               <h2 className="text-3xl font-bold text-white mb-4 tracking-wide">{activeView}</h2>
               <p className="text-gray-400 text-center max-w-md leading-relaxed mb-8">
-                A página de <span className="text-[#A3FF12] font-semibold">{activeView}</span> está em desenvolvimento.
+                A página de <span className="text-[#00A3FF] font-semibold">{activeView}</span> está em desenvolvimento.
               </p>
               <button onClick={() => setActiveView('Visão Geral')} className="btn-primary">
                 Voltar para Visão Geral
@@ -194,7 +194,7 @@ function App() {
 
       <button 
         onClick={() => openModal('outreach')}
-        className="fixed bottom-6 right-6 lg:bottom-10 lg:right-10 w-14 h-14 bg-[#A3FF12] rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(163,255,18,0.4)] hover:bg-[#C6F432] hover:scale-110 active:scale-95 transition-all z-50 text-[#050505]"
+        className="fixed bottom-6 right-6 lg:bottom-10 lg:right-10 w-14 h-14 bg-[#00A3FF] rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,163,255,0.4)] hover:bg-[#008AE6] hover:scale-110 active:scale-95 transition-all z-50 text-white"
         title="Add Data"
       >
         <Plus className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />

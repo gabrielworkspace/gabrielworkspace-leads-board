@@ -38,7 +38,7 @@ export function LeadsTable({ leads, onRemoveLead, onEditLead }: Props) {
                 <td className="py-4 text-xs text-gray-400">
                   {lead.promiseDate ? (
                     <span className="flex items-center gap-2">
-                      <CalendarClock className="w-3 h-3 text-[#C6F432]" /> {lead.promiseDate}
+                      <CalendarClock className="w-3 h-3 text-[#00A3FF]" /> {lead.promiseDate}
                     </span>
                   ) : '--'}
                 </td>
@@ -57,9 +57,9 @@ export function LeadsTable({ leads, onRemoveLead, onEditLead }: Props) {
                 </td>
                 <td className="py-4">
                   <span className={`px-3 py-1 rounded-md text-[10px] font-bold tracking-wide ${
-                    lead.status === 'Replied' ? 'bg-white/10 text-white' :
-                    lead.status === 'Closed' ? 'bg-[#A3FF12]/10 text-[#A3FF12]' :
-                    lead.status === 'Promised' ? 'bg-[#C6F432]/10 text-[#C6F432]' :
+                    lead.status === 'Replied' ? 'bg-[#3B82F6]/10 text-[#3B82F6]' :
+                    lead.status === 'Closed' ? 'bg-[#00A3FF]/10 text-[#00A3FF]' :
+                    lead.status === 'Promised' ? 'bg-[#F97316]/10 text-[#F97316]' :
                     'bg-[#EF4444]/10 text-[#EF4444]'
                   }`}>
                     {

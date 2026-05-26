@@ -15,7 +15,7 @@ export function ProgressChart({ metrics, leads = [] }: { metrics: DailyMetrics[]
             .reduce((sum, l) => sum + (l.value || 0), 0);
           return m.lpRevenue + dayOrganicRevenue - m.adSpend;
         }),
-        backgroundColor: metrics.map((_, i) => i === metrics.length - 1 ? '#A3FF12' : '#333333'),
+        backgroundColor: metrics.map((_, i) => i === metrics.length - 1 ? '#00A3FF' : '#ffffff'),
         borderRadius: 4,
         barThickness: 8,
       }
@@ -69,7 +69,7 @@ export function ProgressChart({ metrics, leads = [] }: { metrics: DailyMetrics[]
          {/* Green tooltip simulator like the screenshot */}
          <div className="absolute right-0 top-1/2 -translate-y-4 bg-white/10 backdrop-blur-md border border-white/10 px-3 py-2 rounded-xl flex items-center justify-center flex-col shadow-lg">
             <span className="text-white font-bold text-xs">Hoje</span>
-            <span className="text-[9px] text-[#A3FF12] font-medium">{todayProfit >= 0 ? '+' : ''}R$ {todayProfit.toLocaleString('en-US')}</span>
+            <span className="text-[9px] text-[#00A3FF] font-medium">{todayProfit >= 0 ? '+' : ''}R$ {todayProfit.toLocaleString('en-US')}</span>
          </div>
       </div>
     </div>
