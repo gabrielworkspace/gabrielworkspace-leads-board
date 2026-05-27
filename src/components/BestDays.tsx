@@ -17,24 +17,54 @@ export function BestDays({ userId }: Props) {
     async function fetchBestDays() {
       if (!userId) return;
 
-      const { data } = await supabase
-        .from('daily_metrics')
-        .select('*')
-        .eq('user_id', userId)
-        .order('lprevenue', { ascending: false })
-        .order('date', { ascending: false })
-        .limit(3);
+      const [metricsResponse, leadsResponse] = await Promise.all([
+        supabase.from('daily_metrics').select('*').eq('user_id', userId),
+        supabase.from('leads').select('*').eq('user_id', userId).eq('status', 'Closed')
+      ]);
 
-      if (data) {
-        setTopDays(data.map(m => ({
+      const metricsData = metricsResponse.data || [];
+      const leadsData = leadsResponse.data || [];
+
+      const daysMap = new Map<string, { date: string, lpRevenue: number, adSpend: number, messagesSent: number, messagesReplied: number }>();
+
+      metricsData.forEach(m => {
+        daysMap.set(m.date, {
           date: m.date,
+          lpRevenue: m.lprevenue || 0,
+          adSpend: m.adspend || 0,
           messagesSent: m.messagessent || 0,
           messagesReplied: m.messagesreplied || 0,
-          adSpend: m.adspend || 0,
-          lpRevenue: m.lprevenue || 0,
-        })));
-      }
+        });
+      });
 
+      leadsData.forEach(l => {
+        if (!l.value) return;
+        const dateStr = l.created_at ? l.created_at.split('T')[0] : '';
+        if (!dateStr) return;
+
+        if (daysMap.has(dateStr)) {
+          daysMap.get(dateStr)!.lpRevenue += l.value;
+        } else {
+          daysMap.set(dateStr, {
+            date: dateStr,
+            lpRevenue: l.value,
+            adSpend: 0,
+            messagesSent: 0,
+            messagesReplied: 0,
+          });
+        }
+      });
+
+      const topDays = Array.from(daysMap.values())
+        .sort((a, b) => {
+          if (b.lpRevenue !== a.lpRevenue) {
+            return b.lpRevenue - a.lpRevenue;
+          }
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        })
+        .slice(0, 3);
+
+      setTopDays(topDays);
       setLoading(false);
     }
 
