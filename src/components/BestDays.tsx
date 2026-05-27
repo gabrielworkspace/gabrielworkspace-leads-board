@@ -11,7 +11,11 @@ interface BestRecords {
   replies: DailyMetrics | null;
 }
 
-export function BestDays() {
+interface Props {
+  userId: string | null;
+}
+
+export function BestDays({ userId }: Props) {
   const [loading, setLoading] = useState(true);
   const [records, setRecords] = useState<BestRecords>({
     revenue: null,
@@ -21,10 +25,13 @@ export function BestDays() {
 
   useEffect(() => {
     async function fetchBestDays() {
+      if (!userId) return;
+
       // Dia com maior faturamento
       const { data: revenueData } = await supabase
         .from('daily_metrics')
         .select('*')
+        .eq('user_id', userId)
         .order('lprevenue', { ascending: false })
         .limit(1);
 
@@ -32,6 +39,7 @@ export function BestDays() {
       const { data: sentData } = await supabase
         .from('daily_metrics')
         .select('*')
+        .eq('user_id', userId)
         .order('messagessent', { ascending: false })
         .limit(1);
 
@@ -39,6 +47,7 @@ export function BestDays() {
       const { data: repliesData } = await supabase
         .from('daily_metrics')
         .select('*')
+        .eq('user_id', userId)
         .order('messagesreplied', { ascending: false })
         .limit(1);
 
@@ -64,7 +73,7 @@ export function BestDays() {
     }
 
     fetchBestDays();
-  }, []);
+  }, [userId]);
 
   if (loading) {
     return (

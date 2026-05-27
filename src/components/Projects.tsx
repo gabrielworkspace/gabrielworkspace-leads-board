@@ -6,6 +6,9 @@ interface Project {
   id: string;
   name: string;
   status: string;
+  service?: string;
+  observations?: string;
+  topics?: string;
 }
 
 const STATUSES = ['Em Planejamento', 'Em Andamento', 'Concluído'];
@@ -20,6 +23,9 @@ export function Projects({ userId }: Props) {
   
   const [isAdding, setIsAdding] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
+  const [newProjectService, setNewProjectService] = useState('');
+  const [newProjectTopics, setNewProjectTopics] = useState('');
+  const [newProjectObs, setNewProjectObs] = useState('');
 
   useEffect(() => {
     if (userId) {
@@ -43,15 +49,30 @@ export function Projects({ userId }: Props) {
     e.preventDefault();
     if (!newProjectName.trim()) return;
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('projects')
-      .insert([{ user_id: userId, name: newProjectName.trim(), status: 'Em Planejamento' }])
+      .insert([{ 
+        user_id: userId, 
+        name: newProjectName.trim(), 
+        status: 'Em Planejamento',
+        service: newProjectService.trim(),
+        topics: newProjectTopics.trim(),
+        observations: newProjectObs.trim()
+      }])
       .select()
       .single();
+
+    if (error) {
+      alert(`Erro ao criar projeto: ${error.message}\n\nLembre-se de adicionar as colunas 'service', 'topics' e 'observations' na tabela 'projects' do Supabase.`);
+      return;
+    }
 
     if (data) {
       setProjects([data, ...projects]);
       setNewProjectName('');
+      setNewProjectService('');
+      setNewProjectTopics('');
+      setNewProjectObs('');
       setIsAdding(false);
     }
   }
@@ -101,18 +122,41 @@ export function Projects({ userId }: Props) {
       {isAdding && (
         <form onSubmit={addProject} className="holo-panel p-6 animate-in slide-in-from-top-4 fade-in max-w-2xl">
           <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-widest border-b border-white/5 pb-2">Iniciar Novo Projeto</h3>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col gap-4">
             <input
               type="text"
               required
-              placeholder="Ex: Refazer Site Principal"
+              placeholder="Nome do Projeto (Ex: Refazer Site Principal)"
               value={newProjectName}
               onChange={(e) => setNewProjectName(e.target.value)}
-              className="flex-1 bg-[#111318] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#0055FF] transition-colors"
+              className="w-full bg-[#111318] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#0055FF] transition-colors"
             />
-            <button type="submit" className="bg-[#0055FF] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#7C3AED] transition-colors">
-              Criar
-            </button>
+            <input
+              type="text"
+              placeholder="Serviço (Ex: Web Design, Consultoria)"
+              value={newProjectService}
+              onChange={(e) => setNewProjectService(e.target.value)}
+              className="w-full bg-[#111318] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#0055FF] transition-colors"
+            />
+            <textarea
+              placeholder="Tópicos de alteração (Ex: Ajuste na Home, Nova página de Contato...)"
+              value={newProjectTopics}
+              onChange={(e) => setNewProjectTopics(e.target.value)}
+              rows={2}
+              className="w-full bg-[#111318] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#0055FF] transition-colors resize-none"
+            />
+            <textarea
+              placeholder="Observações adicionais..."
+              value={newProjectObs}
+              onChange={(e) => setNewProjectObs(e.target.value)}
+              rows={2}
+              className="w-full bg-[#111318] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#0055FF] transition-colors resize-none"
+            />
+            <div className="flex justify-end pt-2">
+              <button type="submit" className="bg-[#0055FF] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#7C3AED] transition-colors">
+                Criar Projeto
+              </button>
+            </div>
           </div>
         </form>
       )}
@@ -141,18 +185,38 @@ export function Projects({ userId }: Props) {
                 )}
                 
                 {columnProjects.map(project => (
-                  <div key={project.id} className="bg-[#111318] border border-white/10 p-4 rounded-2xl group hover:border-[#0055FF]/50 transition-colors">
-                    <div className="flex justify-between items-start mb-4">
+                  <div key={project.id} className="bg-[#111318] border border-white/10 p-4 rounded-2xl group hover:border-[#0055FF]/50 transition-colors flex flex-col gap-3">
+                    <div className="flex justify-between items-start">
                       <h4 className="font-bold text-gray-200 leading-tight pr-4">{project.name}</h4>
                       <button 
                         onClick={() => deleteProject(project.id)}
-                        className="text-gray-600 hover:text-[#EF4444] opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="text-gray-600 hover:text-[#EF4444] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
 
-                    <div className="flex items-center justify-between mt-auto">
+                    {project.service && (
+                      <div className="text-xs text-[#00A3FF] font-medium bg-[#00A3FF]/10 inline-flex px-2 py-1 rounded w-max">
+                        {project.service}
+                      </div>
+                    )}
+                    
+                    {project.topics && (
+                      <div className="text-xs text-gray-400">
+                        <strong className="text-gray-300 block mb-0.5">Tópicos:</strong> 
+                        <span className="whitespace-pre-wrap">{project.topics}</span>
+                      </div>
+                    )}
+
+                    {project.observations && (
+                      <div className="text-xs text-gray-400">
+                        <strong className="text-gray-300 block mb-0.5">Obs:</strong> 
+                        <span className="whitespace-pre-wrap">{project.observations}</span>
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/5">
                       <span className="text-[10px] text-gray-500 font-medium">Mover para:</span>
                       <select 
                         value={project.status}
