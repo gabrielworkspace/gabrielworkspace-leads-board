@@ -123,19 +123,16 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
   const todayTasks = useMemo(() => {
     return tasks.filter(t => {
       const createdDate = new Date(t.created_at);
-      
-      // If the task was created after the target date, it should not show up on the target date
-      const createdDateStart = new Date(createdDate.getFullYear(), createdDate.getMonth(), createdDate.getDate());
-      const targetDateStart = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
-      
-      if (createdDateStart > targetDateStart) {
-        return false;
-      }
-      
-      // Show if it was created on the target date OR if it's uncompleted (carries over)
-      return isSameDay(createdDate, targetDate) || !t.completed;
+      return isSameDay(createdDate, targetDate);
     });
   }, [tasks, targetDate]);
+
+  const isPastDay = useMemo(() => {
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const targetStart = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+    return targetStart < todayStart;
+  }, [targetDate]);
 
   // History Tasks
   const historyData = useMemo(() => {
@@ -307,25 +304,27 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
       {activeTab === 'today' && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
           {/* Input */}
-          <form onSubmit={addTask} className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#00A3FF] to-[#0055FF] rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-500"></div>
-            <div className="relative flex items-center bg-[#111318] rounded-2xl border border-white/10 p-2 shadow-2xl">
-              <input
-                type="text"
-                value={newTaskTitle}
-                onChange={(e) => setNewTaskTitle(e.target.value)}
-                placeholder={dateFilter === 'yesterday' ? 'Qual era a sua missão para ontem?' : 'Qual é a sua próxima missão de hoje?'}
-                className="flex-1 bg-transparent border-none text-white px-4 py-3 outline-none placeholder:text-gray-600 font-medium"
-              />
-              <button 
-                type="submit" 
-                disabled={!newTaskTitle.trim()}
-                className="bg-[#00A3FF] hover:bg-[#008AE6] disabled:opacity-50 disabled:hover:bg-[#00A3FF] text-white p-3 rounded-xl transition-all shadow-[0_0_15px_rgba(0,163,255,0.4)]"
-              >
-                <Plus className="w-5 h-5" />
-              </button>
-            </div>
-          </form>
+          {!isPastDay && (
+            <form onSubmit={addTask} className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#00A3FF] to-[#0055FF] rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-500"></div>
+              <div className="relative flex items-center bg-[#111318] rounded-2xl border border-white/10 p-2 shadow-2xl">
+                <input
+                  type="text"
+                  value={newTaskTitle}
+                  onChange={(e) => setNewTaskTitle(e.target.value)}
+                  placeholder={dateFilter === 'yesterday' ? 'Qual era a sua missão para ontem?' : 'Qual é a sua próxima missão de hoje?'}
+                  className="flex-1 bg-transparent border-none text-white px-4 py-3 outline-none placeholder:text-gray-600 font-medium"
+                />
+                <button 
+                  type="submit" 
+                  disabled={!newTaskTitle.trim()}
+                  className="bg-[#00A3FF] hover:bg-[#008AE6] disabled:opacity-50 disabled:hover:bg-[#00A3FF] text-white p-3 rounded-xl transition-all shadow-[0_0_15px_rgba(0,163,255,0.4)]"
+                >
+                  <Plus className="w-5 h-5" />
+                </button>
+              </div>
+            </form>
+          )}
 
           {/* Task List */}
           <div className="space-y-3 mt-4">
@@ -346,26 +345,31 @@ export function DailyTasks({ dateFilter = '1', userId }: DailyTasksProps) {
                   )}
                 >
                   <div 
-                    className="flex items-center gap-4 flex-1 cursor-pointer"
-                    onClick={() => toggleTask(task)}
+                    className={clsx("flex items-center gap-4 flex-1", !isPastDay && "cursor-pointer")}
+                    onClick={() => {
+                      if (!isPastDay) toggleTask(task);
+                    }}
                   >
-                    <button className="text-[#00A3FF] hover:scale-110 transition-transform">
-                      {task.completed ? <CheckCircle2 className="w-6 h-6" /> : <Circle className="w-6 h-6 text-gray-500" />}
+                    <button className={clsx("transition-transform", !isPastDay && "hover:scale-110", isPastDay && "cursor-not-allowed opacity-80")}>
+                      {task.completed ? <CheckCircle2 className="w-6 h-6 text-[#00A3FF]" /> : <Circle className="w-6 h-6 text-gray-500" />}
                     </button>
                     <span className={clsx(
                       "font-medium transition-all duration-300 select-none",
-                      task.completed ? "text-gray-500 line-through decoration-gray-600" : "text-gray-200"
+                      task.completed ? "text-gray-500 line-through decoration-gray-600" : "text-gray-200",
+                      isPastDay && "opacity-80"
                     )}>
                       {task.title}
                     </span>
                   </div>
 
-                  <button 
-                    onClick={() => deleteTask(task.id)}
-                    className="p-2 text-gray-600 hover:text-[#EF4444] hover:bg-red-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all sm:opacity-100"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  {!isPastDay && (
+                    <button 
+                      onClick={() => deleteTask(task.id)}
+                      className="p-2 text-gray-600 hover:text-[#EF4444] hover:bg-red-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all sm:opacity-100"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               ))
             )}
