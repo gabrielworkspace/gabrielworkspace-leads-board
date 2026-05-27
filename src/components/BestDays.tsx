@@ -1,15 +1,9 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Trophy, TrendingUp, Send, MessageCircle, DollarSign, Loader2, Award } from 'lucide-react';
+import { Trophy, TrendingUp, DollarSign, Loader2, Award } from 'lucide-react';
 import type { DailyMetrics } from '../types';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-
-interface BestRecords {
-  revenue: DailyMetrics | null;
-  sent: DailyMetrics | null;
-  replies: DailyMetrics | null;
-}
 
 interface Props {
   userId: string | null;
@@ -17,57 +11,28 @@ interface Props {
 
 export function BestDays({ userId }: Props) {
   const [loading, setLoading] = useState(true);
-  const [records, setRecords] = useState<BestRecords>({
-    revenue: null,
-    sent: null,
-    replies: null,
-  });
+  const [topDays, setTopDays] = useState<DailyMetrics[]>([]);
 
   useEffect(() => {
     async function fetchBestDays() {
       if (!userId) return;
 
-      // Dia com maior faturamento
-      const { data: revenueData } = await supabase
+      const { data } = await supabase
         .from('daily_metrics')
         .select('*')
         .eq('user_id', userId)
         .order('lprevenue', { ascending: false })
-        .limit(1);
+        .limit(3);
 
-      // Dia com mais envios
-      const { data: sentData } = await supabase
-        .from('daily_metrics')
-        .select('*')
-        .eq('user_id', userId)
-        .order('messagessent', { ascending: false })
-        .limit(1);
-
-      // Dia com mais respostas
-      const { data: repliesData } = await supabase
-        .from('daily_metrics')
-        .select('*')
-        .eq('user_id', userId)
-        .order('messagesreplied', { ascending: false })
-        .limit(1);
-
-      const mapData = (arr: any[] | null): DailyMetrics | null => {
-        if (!arr || arr.length === 0) return null;
-        const m = arr[0];
-        return {
+      if (data) {
+        setTopDays(data.map(m => ({
           date: m.date,
           messagesSent: m.messagessent || 0,
           messagesReplied: m.messagesreplied || 0,
           adSpend: m.adspend || 0,
           lpRevenue: m.lprevenue || 0,
-        };
-      };
-
-      setRecords({
-        revenue: mapData(revenueData),
-        sent: mapData(sentData),
-        replies: mapData(repliesData),
-      });
+        })));
+      }
 
       setLoading(false);
     }
@@ -97,6 +62,12 @@ export function BestDays({ userId }: Props) {
     return `R$ ${val.toFixed(2).replace('.', ',')}`;
   };
 
+  const rankStyles = [
+    { border: "border-t-[#F59E0B]", bg: "bg-[#F59E0B]/10", text: "text-[#F59E0B]", label: "1º LUGAR" },
+    { border: "border-t-[#94A3B8]", bg: "bg-[#94A3B8]/10", text: "text-[#94A3B8]", label: "2º LUGAR" },
+    { border: "border-t-[#B45309]", bg: "bg-[#B45309]/10", text: "text-[#B45309]", label: "3º LUGAR" },
+  ];
+
   return (
     <div className="flex flex-col gap-6 max-w-5xl mx-auto w-full pb-20">
       
@@ -109,50 +80,28 @@ export function BestDays({ userId }: Props) {
           </div>
           <h2 className="text-2xl font-bold text-white tracking-wide">Hall da Fama</h2>
         </div>
-        <p className="text-gray-400 text-sm ml-13">Aqui estão registrados os seus maiores picos de performance.</p>
+        <p className="text-gray-400 text-sm ml-13">Aqui estão registrados os seus maiores picos de performance em faturamento.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        {/* Record: Faturamento */}
-        <div className="holo-panel p-6 border-t-4 border-t-[#00A3FF] flex flex-col items-center text-center group hover:-translate-y-2 transition-transform duration-300">
-          <div className="w-16 h-16 rounded-full bg-[#00A3FF]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <DollarSign className="w-8 h-8 text-[#00A3FF]" />
-          </div>
-          <h3 className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Maior Faturamento</h3>
-          <p className="text-3xl font-black text-white mb-4">{formatCurrency(records.revenue?.lpRevenue)}</p>
-          <div className="bg-[#111318] w-full p-3 rounded-xl border border-white/5 flex items-center justify-center gap-2">
-            <Award className="w-4 h-4 text-[#00A3FF]" />
-            <span className="text-sm font-medium text-gray-300">{formatDate(records.revenue?.date)}</span>
-          </div>
-        </div>
+        {[0, 1, 2].map((index) => {
+          const day = topDays[index];
+          const style = rankStyles[index];
 
-        {/* Record: Envios */}
-        <div className="holo-panel p-6 border-t-4 border-t-[#3B82F6] flex flex-col items-center text-center group hover:-translate-y-2 transition-transform duration-300">
-          <div className="w-16 h-16 rounded-full bg-[#3B82F6]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <Send className="w-8 h-8 text-[#3B82F6]" />
-          </div>
-          <h3 className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Dia Mais Produtivo</h3>
-          <p className="text-3xl font-black text-white mb-4">{records.sent?.messagesSent || 0} <span className="text-lg font-medium text-gray-500">envios</span></p>
-          <div className="bg-[#111318] w-full p-3 rounded-xl border border-white/5 flex items-center justify-center gap-2">
-            <Award className="w-4 h-4 text-[#3B82F6]" />
-            <span className="text-sm font-medium text-gray-300">{formatDate(records.sent?.date)}</span>
-          </div>
-        </div>
-
-        {/* Record: Respostas */}
-        <div className="holo-panel p-6 border-t-4 border-t-[#0055FF] flex flex-col items-center text-center group hover:-translate-y-2 transition-transform duration-300">
-          <div className="w-16 h-16 rounded-full bg-[#0055FF]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <MessageCircle className="w-8 h-8 text-[#0055FF]" />
-          </div>
-          <h3 className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Maior Engajamento</h3>
-          <p className="text-3xl font-black text-white mb-4">{records.replies?.messagesReplied || 0} <span className="text-lg font-medium text-gray-500">respostas</span></p>
-          <div className="bg-[#111318] w-full p-3 rounded-xl border border-white/5 flex items-center justify-center gap-2">
-            <Award className="w-4 h-4 text-[#0055FF]" />
-            <span className="text-sm font-medium text-gray-300">{formatDate(records.replies?.date)}</span>
-          </div>
-        </div>
-
+          return (
+            <div key={index} className={`holo-panel p-6 border-t-4 ${style.border} flex flex-col items-center text-center group hover:-translate-y-2 transition-transform duration-300`}>
+              <div className={`w-16 h-16 rounded-full ${style.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                <DollarSign className={`w-8 h-8 ${style.text}`} />
+              </div>
+              <h3 className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{style.label}</h3>
+              <p className="text-3xl font-black text-white mb-4">{formatCurrency(day?.lpRevenue)}</p>
+              <div className="bg-[#111318] w-full p-3 rounded-xl border border-white/5 flex items-center justify-center gap-2">
+                <Award className={`w-4 h-4 ${style.text}`} />
+                <span className="text-sm font-medium text-gray-300">{formatDate(day?.date)}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Dica */}
