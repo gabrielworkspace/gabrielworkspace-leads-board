@@ -22,6 +22,7 @@ export function BestDays({ userId }: Props) {
         .select('*')
         .eq('user_id', userId)
         .order('lprevenue', { ascending: false })
+        .order('date', { ascending: false })
         .limit(3);
 
       if (data) {
