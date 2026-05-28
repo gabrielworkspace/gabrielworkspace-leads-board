@@ -4,7 +4,6 @@ import type { DailyMetrics, Lead } from '../types';
 
 export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], leads: Lead[] }) {
   const latest = metrics[metrics.length - 1] || { messagesSent: 0, messagesReplied: 0 };
-  const totalSent = latest.messagesSent || 0;
   const totalReplies = latest.messagesReplied || 0;
   
   const closedLeads = leads.filter(l => l.status === 'Closed').length;
