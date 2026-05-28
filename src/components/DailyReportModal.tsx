@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { X, Trophy, MessageSquare, DollarSign, Target } from 'lucide-react';
 import type { DailyMetrics, Lead } from '../types';
 
@@ -11,7 +12,7 @@ interface Props {
 export function DailyReportModal({ isOpen, onClose, metrics, leads }: Props) {
   if (!isOpen) return null;
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = format(new Date(), 'yyyy-MM-dd');
   const messagesSent = metrics?.messagesSent || 0;
   const messagesReplied = metrics?.messagesReplied || 0;
   const adSpend = metrics?.adSpend || 0;

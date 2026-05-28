@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { Bar } from 'react-chartjs-2';
 import { Zap, ArrowUpRight } from 'lucide-react';
 import type { DailyMetrics, Lead } from '../types';
@@ -40,7 +41,7 @@ export function ProgressChart({ metrics, leads = [] }: { metrics: DailyMetrics[]
   
   const totalProfit = totalLpRevenue + totalOrganicRevenue - totalAdSpend;
 
-  const todayMetrics = metrics[metrics.length - 1] || { lpRevenue: 0, adSpend: 0, date: new Date().toISOString().split('T')[0] };
+  const todayMetrics = metrics[metrics.length - 1] || { lpRevenue: 0, adSpend: 0, date: format(new Date(), 'yyyy-MM-dd') };
   const todayLeads = leads.filter(l => l.created_at && l.created_at.startsWith(todayMetrics.date));
   const todayOrganicRevenue = todayLeads
     .filter(l => l.status === 'Closed' && l.value)

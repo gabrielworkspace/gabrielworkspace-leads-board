@@ -16,7 +16,7 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
     labels: ['Replied/Closed', 'Promised', 'Ignored/Lost'],
     datasets: [{
       data: [repliedLeads, promisedLeads, ignored],
-      backgroundColor: ['#008AE6', '#00A3FF', '#3B82F6'], // Orange, Green, Blue
+      backgroundColor: ['#10B981', '#A855F7', '#EF4444'], // Emerald, Purple, Red
       borderWidth: 0,
       cutout: '80%',
     }]
@@ -60,19 +60,19 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
         </div>
         <div className="flex items-center justify-between text-[11px]">
           <div className="flex items-center gap-2 text-gray-400 font-medium">
-            <span className="w-2 h-2 rounded-full bg-[#008AE6]"></span> Foco em Leads
+            <span className="w-2 h-2 rounded-full bg-[#10B981]"></span> Foco em Leads
           </div>
           <span className="text-white font-medium">{repliedLeads} responderam</span>
         </div>
         <div className="flex items-center justify-between text-[11px]">
           <div className="flex items-center gap-2 text-gray-400 font-medium">
-            <span className="w-2 h-2 rounded-full bg-[#00A3FF]"></span> Prometeram
+            <span className="w-2 h-2 rounded-full bg-[#A855F7]"></span> Prometeram
           </div>
           <span className="text-white font-medium">{promisedLeads} pendentes</span>
         </div>
         <div className="flex items-center justify-between text-[11px]">
           <div className="flex items-center gap-2 text-gray-400 font-medium">
-            <span className="w-2 h-2 rounded-full bg-[#3B82F6]"></span> Sem Resposta/Recusas
+            <span className="w-2 h-2 rounded-full bg-[#EF4444]"></span> Sem Resposta/Recusas
           </div>
           <span className="text-white font-medium">{ignored} perdidos</span>
         </div>

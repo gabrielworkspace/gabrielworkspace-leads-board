@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { TrendingUp, ArrowUpRight, ArrowDownRight, Award } from 'lucide-react';
@@ -49,7 +50,7 @@ export function DumpComparison() {
     async function fetchData() {
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29);
-      const thirtyDaysStr = thirtyDaysAgo.toISOString().split('T')[0];
+      const thirtyDaysStr = format(thirtyDaysAgo, 'yyyy-MM-dd');
       
       const { data: metricsData } = await supabase
         .from('daily_metrics')
@@ -74,7 +75,7 @@ export function DumpComparison() {
       for (let i = 29; i >= 0; i--) {
         const d = new Date();
         d.setDate(d.getDate() - i);
-        dailyProfitMap.set(d.toISOString().split('T')[0], 0);
+        dailyProfitMap.set(format(d, 'yyyy-MM-dd'), 0);
       }
 
       if (metricsData) {

@@ -61,9 +61,9 @@ export function LeadsTable({ leads, onRemoveLead, onEditLead }: Props) {
                 </td>
                 <td className="py-4">
                   <span className={`px-3 py-1 rounded-md text-[10px] font-bold tracking-wide ${
-                    lead.status === 'Replied' ? 'bg-[#3B82F6]/10 text-[#3B82F6]' :
+                    lead.status === 'Replied' ? 'bg-[#10B981]/10 text-[#10B981]' :
                     lead.status === 'Closed' ? 'bg-[#00A3FF]/10 text-[#00A3FF]' :
-                    lead.status === 'Promised' ? 'bg-[#008AE6]/10 text-[#008AE6]' :
+                    lead.status === 'Promised' ? 'bg-[#A855F7]/10 text-[#A855F7]' :
                     lead.status === 'Refused' ? 'bg-[#F97316]/10 text-[#F97316]' :
                     'bg-[#EF4444]/10 text-[#EF4444]'
                   }`}>

@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight, Calendar, Bell, Menu } from 'lucide-react';
 import profilePic from '../../img/WhatsApp Image 2026-05-22 at 14.11.20(1).jpeg';
 import matheusPic from '../../img/WhatsApp Image 2026-05-22 at 14.31.57.jpeg';
@@ -15,7 +16,7 @@ export function TopBar({ dateFilter, setDateFilter, onOpenSidebar, onOpenReport,
   const displayName = userId === 'matheus' ? 'Matheus' : 'Gabriel';
   const currentPic = userId === 'matheus' ? matheusPic : profilePic;
   const now = new Date();
-  const todayStr = now.toISOString().split('T')[0];
+  const todayStr = format(now, 'yyyy-MM-dd');
   const isAfter10PM = now.getHours() >= 22;
   const hasSeenReport = localStorage.getItem('@NexusBoard:lastReportSeen') === todayStr;
   

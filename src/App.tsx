@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { useState, useMemo } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { TopBar } from './components/TopBar';
@@ -90,11 +91,11 @@ function App() {
   const filteredLeads = useMemo(() => {
     if (dateFilter === 'all') return leads;
     
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = format(new Date(), 'yyyy-MM-dd');
     
     const d = new Date();
     d.setDate(d.getDate() - 1);
-    const yesterdayStr = d.toISOString().split('T')[0];
+    const yesterdayStr = format(d, 'yyyy-MM-dd');
 
     if (dateFilter === '1') {
       return leads.filter(l => l.created_at && l.created_at.startsWith(todayStr));
@@ -107,7 +108,7 @@ function App() {
     const days = parseInt(dateFilter);
     const pastD = new Date();
     pastD.setDate(pastD.getDate() - days + 1);
-    const pastDateStr = pastD.toISOString().split('T')[0];
+    const pastDateStr = format(pastD, 'yyyy-MM-dd');
     
     return leads.filter(l => {
       if (!l.created_at) return false;

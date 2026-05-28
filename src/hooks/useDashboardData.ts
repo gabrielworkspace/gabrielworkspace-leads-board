@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import type { DailyMetrics, Lead } from '../types';
@@ -27,7 +28,7 @@ export function useDashboardData(userId: string | null) {
         .from('daily_metrics')
         .select('*')
         .eq('user_id', userId)
-        .gte('date', thirtyDaysAgo.toISOString().split('T')[0])
+        .gte('date', format(thirtyDaysAgo, 'yyyy-MM-dd'))
         .order('date', { ascending: true });
 
       const paddedMetrics: DailyMetrics[] = [];
@@ -48,7 +49,7 @@ export function useDashboardData(userId: string | null) {
       for (let i = 29; i >= 0; i--) {
         const d = new Date();
         d.setDate(d.getDate() - i);
-        const dateStr = d.toISOString().split('T')[0];
+        const dateStr = format(d, 'yyyy-MM-dd');
         
         if (dataMap.has(dateStr)) {
           paddedMetrics.push(dataMap.get(dateStr));
@@ -66,7 +67,7 @@ export function useDashboardData(userId: string | null) {
 
   const updateTodayMetrics = async (newMetrics: Partial<DailyMetrics>, isIncremental = false) => {
     if (!userId) return;
-    const today = new Date().toISOString().split('T')[0];
+    const today = format(new Date(), 'yyyy-MM-dd');
     const { data: existing } = await supabase.from('daily_metrics').select('*').eq('user_id', userId).eq('date', today).maybeSingle();
     
     const dbPayload: any = {};
@@ -159,7 +160,7 @@ export function useDashboardData(userId: string | null) {
     for (let i = 29; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      paddedMetrics.push({ date: d.toISOString().split('T')[0], messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0 });
+      paddedMetrics.push({ date: format(d, 'yyyy-MM-dd'), messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0 });
     }
     setMetrics(paddedMetrics);
   };
