@@ -16,7 +16,7 @@ export function LeadsTable({ leads, onRemoveLead, onEditLead }: Props) {
       </div>
       
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-collapse whitespace-nowrap">
           <thead>
             <tr className="text-[10px] text-gray-500 uppercase tracking-widest border-b border-white/5">
               <th className="pb-3 font-medium px-4">Nome</th>

@@ -403,7 +403,7 @@ export function DumpComparison() {
           </div>
 
           <div className="flex-1 overflow-y-auto no-scrollbar pr-2">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse whitespace-nowrap">
               <thead>
                 <tr className="text-xs text-gray-500 border-b border-white/5">
                   <th className="pb-3 font-medium">Nome do Lead</th>
