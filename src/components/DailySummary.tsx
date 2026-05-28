@@ -10,13 +10,14 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
   const closedLeads = leads.filter(l => l.status === 'Closed').length;
   const repliedLeads = leads.filter(l => l.status === 'Replied').length + closedLeads;
   const promisedLeads = leads.filter(l => l.status === 'Promised').length;
-  const ignored = Math.max(0, totalSent - (repliedLeads + promisedLeads));
+  const refusedLeads = leads.filter(l => l.status === 'Refused').length;
+  const ignored = Math.max(0, totalSent - (repliedLeads + promisedLeads + refusedLeads));
   
   const chartData = {
-    labels: ['Replied/Closed', 'Promised', 'Ignored/Lost'],
+    labels: ['Replied/Closed', 'Promised', 'Refused', 'Ignored/Lost'],
     datasets: [{
-      data: [repliedLeads, promisedLeads, ignored],
-      backgroundColor: ['#10B981', '#A855F7', '#EF4444'], // Emerald, Purple, Red
+      data: [repliedLeads, promisedLeads, refusedLeads, ignored],
+      backgroundColor: ['#10B981', '#A855F7', '#EF4444', '#6B7280'], // Emerald, Purple, Red, Gray
       borderWidth: 0,
       cutout: '80%',
     }]
@@ -30,7 +31,7 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
   };
 
   return (
-    <div className="holo-panel p-6 flex flex-col h-[340px] relative">
+    <div className="holo-panel p-6 flex flex-col h-[360px] relative">
       <button className="absolute top-4 right-4 p-2 bg-[#1A1A1A] rounded-xl text-gray-400 hover:text-white transition-colors">
         <ArrowUpRight size={14} />
       </button>
@@ -72,7 +73,13 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
         </div>
         <div className="flex items-center justify-between text-[11px]">
           <div className="flex items-center gap-2 text-gray-400 font-medium">
-            <span className="w-2 h-2 rounded-full bg-[#EF4444]"></span> Sem Resposta/Recusas
+            <span className="w-2 h-2 rounded-full bg-[#EF4444]"></span> Recusou
+          </div>
+          <span className="text-white font-medium">{refusedLeads} perdidos</span>
+        </div>
+        <div className="flex items-center justify-between text-[11px]">
+          <div className="flex items-center gap-2 text-gray-400 font-medium">
+            <span className="w-2 h-2 rounded-full bg-[#6B7280]"></span> Sem Resposta
           </div>
           <span className="text-white font-medium">{ignored} perdidos</span>
         </div>

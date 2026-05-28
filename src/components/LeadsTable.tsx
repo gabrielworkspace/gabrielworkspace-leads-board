@@ -64,8 +64,8 @@ export function LeadsTable({ leads, onRemoveLead, onEditLead }: Props) {
                     lead.status === 'Replied' ? 'bg-[#10B981]/10 text-[#10B981]' :
                     lead.status === 'Closed' ? 'bg-[#00A3FF]/10 text-[#00A3FF]' :
                     lead.status === 'Promised' ? 'bg-[#A855F7]/10 text-[#A855F7]' :
-                    lead.status === 'Refused' ? 'bg-[#F97316]/10 text-[#F97316]' :
-                    'bg-[#EF4444]/10 text-[#EF4444]'
+                    lead.status === 'Refused' ? 'bg-[#EF4444]/10 text-[#EF4444]' :
+                    'bg-[#6B7280]/10 text-[#6B7280]'
                   }`}>
                     {
                       lead.status === 'Replied' ? 'Respondeu' :
