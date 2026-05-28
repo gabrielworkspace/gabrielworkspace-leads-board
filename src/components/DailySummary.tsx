@@ -11,7 +11,7 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
   const repliedLeads = leads.filter(l => l.status === 'Replied').length + closedLeads;
   const promisedLeads = leads.filter(l => l.status === 'Promised').length;
   const refusedLeads = leads.filter(l => l.status === 'Refused').length;
-  const ignored = Math.max(0, totalSent - (repliedLeads + promisedLeads + refusedLeads));
+  const ignored = leads.filter(l => l.status === 'Ignored').length;
   
   const chartData = {
     labels: ['Replied/Closed', 'Promised', 'Refused', 'Ignored/Lost'],
