@@ -6,7 +6,7 @@ export interface DailyMetrics {
   messagesReplied: number;
 }
 
-export type LeadStatus = 'Replied' | 'Ignored' | 'Closed' | 'Promised';
+export type LeadStatus = 'Replied' | 'Ignored' | 'Refused' | 'Closed' | 'Promised';
 export type ServiceType = 'Landing Page' | 'Social Media' | 'SaaS';
 
 export interface Lead {

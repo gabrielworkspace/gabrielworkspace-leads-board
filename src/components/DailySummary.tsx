@@ -72,7 +72,7 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
         </div>
         <div className="flex items-center justify-between text-[11px]">
           <div className="flex items-center gap-2 text-gray-400 font-medium">
-            <span className="w-2 h-2 rounded-full bg-[#3B82F6]"></span> Ignorados
+            <span className="w-2 h-2 rounded-full bg-[#3B82F6]"></span> Sem Resposta/Recusas
           </div>
           <span className="text-white font-medium">{ignored} perdidos</span>
         </div>
