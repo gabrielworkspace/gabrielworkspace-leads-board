@@ -98,11 +98,17 @@ function App() {
     const yesterdayStr = format(d, 'yyyy-MM-dd');
 
     if (dateFilter === '1') {
-      return leads.filter(l => l.created_at && l.created_at.startsWith(todayStr));
+      return leads.filter(l => {
+        if (!l.created_at) return false;
+        return format(new Date(l.created_at), 'yyyy-MM-dd') === todayStr;
+      });
     }
     
     if (dateFilter === 'yesterday') {
-      return leads.filter(l => l.created_at && l.created_at.startsWith(yesterdayStr));
+      return leads.filter(l => {
+        if (!l.created_at) return false;
+        return format(new Date(l.created_at), 'yyyy-MM-dd') === yesterdayStr;
+      });
     }
 
     const days = parseInt(dateFilter);
@@ -112,7 +118,7 @@ function App() {
     
     return leads.filter(l => {
       if (!l.created_at) return false;
-      const leadDateStr = l.created_at.split('T')[0];
+      const leadDateStr = format(new Date(l.created_at), 'yyyy-MM-dd');
       return leadDateStr >= pastDateStr;
     });
   }, [leads, dateFilter]);

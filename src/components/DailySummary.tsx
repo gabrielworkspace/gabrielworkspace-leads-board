@@ -41,8 +41,8 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
         <h3 className="text-sm font-medium text-gray-300">Resumo Diário</h3>
       </div>
       
-      <div className="flex-1 relative flex items-center justify-center my-4">
-         <div className="w-[140px] h-[140px]">
+      <div className="flex-1 relative flex items-center justify-center my-2">
+         <div className="w-[120px] h-[120px]">
             <Doughnut data={chartData} options={options} />
          </div>
          {/* Inner text for doughnut */}
@@ -52,14 +52,14 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
          </div>
       </div>
       
-      <div className="flex flex-col gap-2 mt-auto">
+      <div className="flex flex-col gap-1.5 mt-auto">
         <div className="flex items-center justify-between text-[11px] pb-1 border-b border-white/5">
           <div className="flex items-center gap-2 text-gray-300 font-bold">
              Total de Respostas
           </div>
           <span className="text-[#00A3FF] font-bold">{totalReplies} respostas</span>
         </div>
-        <div className="flex items-center justify-between text-[11px] pb-2 border-b border-white/5 mb-1">
+        <div className="flex items-center justify-between text-[11px] pb-1 border-b border-white/5 mb-1">
           <div className="flex items-center gap-2 text-gray-400 font-medium">
              Msgs s/ Resposta
           </div>
