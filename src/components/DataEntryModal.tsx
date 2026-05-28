@@ -2,6 +2,9 @@ import { X, Save, Trash2, PlusCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import type { DailyMetrics, LeadStatus, Lead, ServiceType } from '../types';
+import { Button } from './ui/Button';
+import { Input } from './ui/Input';
+import { Select } from './ui/Select';
 
 interface Props {
   isOpen: boolean;
@@ -141,21 +144,15 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
                    <h4 className="text-[10px] uppercase tracking-widest text-[#00A3FF] font-bold border-b border-white/5 pb-1">Métricas de Abordagem</h4>
                    <p className="text-xs text-gray-400 mb-4">Insira o total final de mensagens para o dia de hoje.</p>
                    <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-medium text-gray-400 mb-1">Mensagens Enviadas</label>
-                      <input type="number" value={metricsForm.messagesSent} onChange={e => setMetricsForm({...metricsForm, messagesSent: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: 50" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-400 mb-1">Respondidas (Manual)</label>
-                      <input type="number" value={metricsForm.messagesReplied} onChange={e => setMetricsForm({...metricsForm, messagesReplied: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: 5" />
-                    </div>
+                    <Input label="Mensagens Enviadas" type="number" placeholder="Ex: 50" value={metricsForm.messagesSent} onChange={e => setMetricsForm({...metricsForm, messagesSent: e.target.value})} />
+                    <Input label="Respondidas (Manual)" type="number" placeholder="Ex: 5" value={metricsForm.messagesReplied} onChange={e => setMetricsForm({...metricsForm, messagesReplied: e.target.value})} />
                   </div>
                 </div>
                 
                 <div className="pt-4">
-                  <button type="submit" className="w-full btn-primary flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,163,255,0.4)]">
-                    <Save className="w-4 h-4" /> Atualizar Dados de Hoje
-                  </button>
+                  <Button type="submit" className="w-full">
+                    <Save className="w-4 h-4 mr-2" /> Atualizar Dados de Hoje
+                  </Button>
                 </div>
               </form>
             )}
@@ -166,70 +163,53 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
                   <h4 className="text-[10px] uppercase tracking-widest text-[#00A3FF] font-bold border-b border-white/5 pb-1">Tráfego Pago (Opcional)</h4>
                   <p className="text-xs text-gray-400 mb-4">Acompanhe se o investimento trará melhores resultados que a abordagem orgânica fria.</p>
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-medium text-gray-400 mb-1">Investimento (R$)</label>
-                      <input type="number" step="0.01" value={metricsForm.adSpend} onChange={e => setMetricsForm({...metricsForm, adSpend: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: 100" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-400 mb-1">Faturamento (R$)</label>
-                      <input type="number" step="0.01" value={metricsForm.lpRevenue} onChange={e => setMetricsForm({...metricsForm, lpRevenue: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: 500" />
-                    </div>
+                    <Input label="Investimento (R$)" type="number" step="0.01" placeholder="Ex: 100" value={metricsForm.adSpend} onChange={e => setMetricsForm({...metricsForm, adSpend: e.target.value})} />
+                    <Input label="Faturamento (R$)" type="number" step="0.01" placeholder="Ex: 500" value={metricsForm.lpRevenue} onChange={e => setMetricsForm({...metricsForm, lpRevenue: e.target.value})} />
                   </div>
                 </div>
 
                 <div className="pt-4">
-                  <button type="submit" className="w-full btn-primary flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,163,255,0.4)]">
-                    <Save className="w-4 h-4" /> Salvar Dados Financeiros
-                  </button>
+                  <Button type="submit" className="w-full">
+                    <Save className="w-4 h-4 mr-2" /> Salvar Dados Financeiros
+                  </Button>
                 </div>
               </form>
             )}
 
             {tab === 'leads' && (
               <form className="space-y-4" onSubmit={handleAddLead}>
-                <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-1">Nome do Lead / Contato</label>
-                  <input required type="text" value={leadForm.name} onChange={e => setLeadForm({...leadForm, name: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: João Silva (Insta)" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-1">Status</label>
-                  <select value={leadForm.status} onChange={e => setLeadForm({...leadForm, status: e.target.value as LeadStatus})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm appearance-none">
-                    <option value="Replied">Respondeu</option>
-                    <option value="Closed">Fechou</option>
-                    <option value="Promised">Prometeu dar uma resposta</option>
-                    <option value="Ignored">Lead s/ resposta</option>
-                    <option value="Refused">Recusou</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-1">Serviço Oferecido</label>
-                  <select value={leadForm.serviceType} onChange={e => setLeadForm({...leadForm, serviceType: e.target.value as ServiceType})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm appearance-none">
-                    <option value="Landing Page">Landing Page</option>
-                    <option value="Social Media">Social Media</option>
-                    <option value="SaaS">SaaS</option>
-                  </select>
-                </div>
+                <Input label="Nome do Lead / Contato" required type="text" placeholder="Ex: João Silva (Insta)" value={leadForm.name} onChange={e => setLeadForm({...leadForm, name: e.target.value})} />
+                
+                <Select label="Status" value={leadForm.status} onChange={e => setLeadForm({...leadForm, status: e.target.value as LeadStatus})}>
+                  <option value="Replied">Respondeu</option>
+                  <option value="Closed">Fechou</option>
+                  <option value="Promised">Prometeu dar uma resposta</option>
+                  <option value="Ignored">Lead s/ resposta</option>
+                  <option value="Refused">Recusou</option>
+                </Select>
+
+                <Select label="Serviço Oferecido" value={leadForm.serviceType} onChange={e => setLeadForm({...leadForm, serviceType: e.target.value as ServiceType})}>
+                  <option value="Landing Page">Landing Page</option>
+                  <option value="Social Media">Social Media</option>
+                  <option value="SaaS">SaaS</option>
+                </Select>
                 
                 {leadForm.status === 'Promised' && (
-                  <div>
-                    <label className="block text-xs font-medium text-gray-400 mb-1">Data de Retorno</label>
-                    <input type="date" value={leadForm.promiseDate} onChange={e => setLeadForm({...leadForm, promiseDate: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" />
-                  </div>
+                  <Input label="Data de Retorno" type="date" value={leadForm.promiseDate} onChange={e => setLeadForm({...leadForm, promiseDate: e.target.value})} />
                 )}
 
+                <Input label="Valor Fechado (R$) - Opcional" type="number" placeholder="Ex: 500" value={leadForm.value} onChange={e => setLeadForm({...leadForm, value: e.target.value})} />
+                
                 <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-1">Valor Fechado (R$) - Opcional</label>
-                  <input type="number" value={leadForm.value} onChange={e => setLeadForm({...leadForm, value: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm" placeholder="Ex: 500" />
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Observações (Opcional)</label>
+                  <textarea value={leadForm.observations} onChange={e => setLeadForm({...leadForm, observations: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 hover:border-white/20 focus:border-[#00A3FF]/50 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3FF]/50 transition-colors min-h-[80px]" placeholder="Anotações sobre o lead..."></textarea>
                 </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-1">Observações (Opcional)</label>
-                  <textarea value={leadForm.observations} onChange={e => setLeadForm({...leadForm, observations: e.target.value})} className="w-full bg-[#151210] border border-white/10 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-[#00A3FF] transition-colors text-sm min-h-[80px]" placeholder="Anotações sobre o lead..."></textarea>
-                </div>
+                
                 <div className="pt-4">
-                  <button type="submit" className="w-full btn-primary flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,163,255,0.4)]">
-                    {editingLead ? <Save className="w-4 h-4" /> : <PlusCircle className="w-4 h-4" />}
+                  <Button type="submit" className="w-full">
+                    {editingLead ? <Save className="w-4 h-4 mr-2" /> : <PlusCircle className="w-4 h-4 mr-2" />}
                     {editingLead ? 'Salvar Alterações' : 'Adicionar Lead'}
-                  </button>
+                  </Button>
                 </div>
               </form>
             )}
@@ -237,9 +217,9 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
             {tab === 'settings' && (
               <div className="space-y-4 pt-4">
                 <p className="text-sm text-gray-400 text-center mb-6">Zerar todos os dados e começar do zero.</p>
-                <button type="button" onClick={handleClear} className="w-full bg-transparent border border-[#EF4444] text-[#EF4444] hover:bg-[#EF4444] hover:text-white font-medium py-2 px-4 rounded-xl transition-all flex items-center justify-center gap-2">
-                  <Trash2 className="w-4 h-4" /> Apagar Todos os Dados
-                </button>
+                <Button type="button" variant="danger" className="w-full" onClick={handleClear}>
+                  <Trash2 className="w-4 h-4 mr-2" /> Apagar Todos os Dados
+                </Button>
               </div>
             )}
           </motion.div>

@@ -1,21 +1,21 @@
 import { LayoutDashboard, CheckSquare, Layers, Trophy, Calendar, LogOut, Users } from 'lucide-react';
 import { clsx } from 'clsx';
+import { NavLink } from 'react-router-dom';
 
 interface Props {
-  activeView: string;
-  setActiveView: (view: string) => void;
   onLogout: () => void;
   isOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
-export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) {
+export function Sidebar({ onLogout, isOpen, onCloseMobile }: Props) {
   const mainItems = [
-    { icon: <LayoutDashboard size={18} />, label: 'Visão Geral' },
-    { icon: <CheckSquare size={18} />, label: 'Tarefas Diárias' },
-    { icon: <Layers size={18} />, label: 'Projetos' },
-    { icon: <Trophy size={18} />, label: 'Melhores Dias' },
-    { icon: <Calendar size={18} />, label: 'Planejamento' },
-    { icon: <Users size={18} />, label: 'Comparação Dump' },
+    { icon: <LayoutDashboard size={18} />, label: 'Visão Geral', path: '/' },
+    { icon: <CheckSquare size={18} />, label: 'Tarefas Diárias', path: '/tasks' },
+    { icon: <Layers size={18} />, label: 'Projetos', path: '/projects' },
+    { icon: <Trophy size={18} />, label: 'Melhores Dias', path: '/best-days' },
+    { icon: <Calendar size={18} />, label: 'Planejamento', path: '/planner' },
+    { icon: <Users size={18} />, label: 'Comparação Dump', path: '/dump' },
   ];
 
   return (
@@ -33,13 +33,13 @@ export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) 
         <div className="space-y-1">
           <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 px-2">Principal</h3>
           {mainItems.map((item, i) => {
-            const isActive = activeView === item.label;
             const isDumpItem = item.label === 'Comparação Dump';
             return (
-              <div 
+              <NavLink 
                 key={i} 
-                onClick={() => setActiveView(item.label)}
-                className={clsx(
+                to={item.path}
+                onClick={onCloseMobile}
+                className={({ isActive }) => clsx(
                   "nav-item text-sm px-3 py-2.5 rounded-xl cursor-pointer transition-all flex items-center gap-3", 
                   isActive 
                     ? isDumpItem 
@@ -50,7 +50,7 @@ export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) 
               >
                 {item.icon}
                 <span>{item.label}</span>
-              </div>
+              </NavLink>
             );
           })}
         </div>

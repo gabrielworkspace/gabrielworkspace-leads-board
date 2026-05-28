@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import { useState, useMemo } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { TopBar } from './components/TopBar';
 import { ProgressChart } from './components/ProgressChart';
@@ -46,7 +47,6 @@ ChartJS.register(
 );
 
 function App() {
-  const [activeView, setActiveView] = useState('Visão Geral');
   const [dateFilter, setDateFilter] = useState('1');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -56,6 +56,22 @@ function App() {
     return localStorage.getItem('@NexusBoard:userId');
   });
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  
+  const location = useLocation();
+
+  const getActiveViewName = (pathname: string) => {
+    switch (pathname) {
+      case '/': return 'Visão Geral';
+      case '/tasks': return 'Tarefas Diárias';
+      case '/projects': return 'Projetos';
+      case '/best-days': return 'Melhores Dias';
+      case '/planner': return 'Planejamento';
+      case '/dump': return 'Comparação Dump';
+      default: return 'Página não encontrada';
+    }
+  };
+
+  const activeView = getActiveViewName(location.pathname);
 
   const { metrics, leads, updateTodayMetrics, addLead, updateLead, removeLead, clearData, loading } = useDashboardData(currentUserId);
 
@@ -138,7 +154,7 @@ function App() {
   return (
     <div className="h-[100dvh] w-screen flex relative overflow-hidden bg-[#050505] justify-center">
       <div className="flex w-full max-w-[1920px] mx-auto bg-transparent">
-        <Sidebar activeView={activeView} setActiveView={(v) => { setActiveView(v); setIsMobileMenuOpen(false); }} onLogout={handleLogout} isOpen={isMobileMenuOpen} />
+        <Sidebar onCloseMobile={() => setIsMobileMenuOpen(false)} onLogout={handleLogout} isOpen={isMobileMenuOpen} />
 
         {/* Overlay for mobile when sidebar is open */}
         {isMobileMenuOpen && (
@@ -151,51 +167,36 @@ function App() {
         <main className="flex-1 h-[100dvh] overflow-y-auto p-4 pt-8 lg:p-10 flex flex-col relative z-10 no-scrollbar w-full">
           <TopBar userId={currentUserId} dateFilter={dateFilter} setDateFilter={setDateFilter} onOpenSidebar={() => setIsMobileMenuOpen(true)} onOpenReport={() => setIsReportModalOpen(true)} activeView={activeView} />
           
-          {activeView === 'Visão Geral' ? (
-            <div className="flex flex-col gap-6 pb-20 w-full">
-              
-              {/* TOP GRID: 3 Columns */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-                <ProgressChart metrics={filteredMetrics} leads={filteredLeads} />
-                <QuickStats metrics={filteredMetrics} onEditMetrics={() => openModal('outreach')} onEditAds={() => openModal('financial')} />
-                <DailySummary metrics={filteredMetrics} leads={filteredLeads} />
-              </div>
-              
-              {/* FINANCIAL BREAKDOWN */}
-              <div className="w-full">
-                <FinancialSummary metrics={filteredMetrics} leads={filteredLeads} />
-              </div>
-              
-              {/* BOTTOM GRID: Table */}
-              <div className="w-full overflow-hidden">
-                <LeadsTable leads={filteredLeads} onRemoveLead={removeLead} onEditLead={handleEditLead} />
-              </div>
+          <Routes>
+            <Route path="/" element={
+              <div className="flex flex-col gap-6 pb-20 w-full">
+                
+                {/* TOP GRID: 3 Columns */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
+                  <ProgressChart metrics={filteredMetrics} leads={filteredLeads} />
+                  <QuickStats metrics={filteredMetrics} onEditMetrics={() => openModal('outreach')} onEditAds={() => openModal('financial')} />
+                  <DailySummary metrics={filteredMetrics} leads={filteredLeads} />
+                </div>
+                
+                {/* FINANCIAL BREAKDOWN */}
+                <div className="w-full">
+                  <FinancialSummary metrics={filteredMetrics} leads={filteredLeads} />
+                </div>
+                
+                {/* BOTTOM GRID: Table */}
+                <div className="w-full overflow-hidden">
+                  <LeadsTable leads={filteredLeads} onRemoveLead={removeLead} onEditLead={handleEditLead} />
+                </div>
 
-            </div>
-          ) : activeView === 'Tarefas Diárias' ? (
-            <DailyTasks dateFilter={dateFilter} userId={currentUserId} />
-          ) : activeView === 'Melhores Dias' ? (
-            <BestDays userId={currentUserId} />
-          ) : activeView === 'Planejamento' ? (
-            <Planner userId={currentUserId} />
-          ) : activeView === 'Projetos' ? (
-            <Projects userId={currentUserId} />
-          ) : activeView === 'Comparação Dump' ? (
-            <DumpComparison />
-          ) : (
-            <div className="flex-1 flex flex-col items-center justify-center holo-panel p-10 min-h-[500px]">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#00A3FF]/20 to-[#0055FF]/20 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,163,255,0.1)]">
-                <span className="text-3xl text-[#00A3FF]">🚀</span>
               </div>
-              <h2 className="text-3xl font-bold text-white mb-4 tracking-wide">{activeView}</h2>
-              <p className="text-gray-400 text-center max-w-md leading-relaxed mb-8">
-                A página de <span className="text-[#00A3FF] font-semibold">{activeView}</span> está em desenvolvimento.
-              </p>
-              <button onClick={() => setActiveView('Visão Geral')} className="btn-primary">
-                Voltar para Visão Geral
-              </button>
-            </div>
-          )}
+            } />
+            <Route path="/tasks" element={<DailyTasks dateFilter={dateFilter} userId={currentUserId} />} />
+            <Route path="/best-days" element={<BestDays userId={currentUserId} />} />
+            <Route path="/planner" element={<Planner userId={currentUserId} />} />
+            <Route path="/projects" element={<Projects userId={currentUserId} />} />
+            <Route path="/dump" element={<DumpComparison />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </main>
       </div>
 
@@ -207,27 +208,31 @@ function App() {
         <Plus className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
       </button>
 
-      <DataEntryModal 
-        isOpen={isModalOpen} 
-        onClose={() => {
-          setIsModalOpen(false);
-          setEditingLead(null);
-        }} 
-        currentMetrics={metrics[metrics.length - 1]}
-        onSaveMetrics={updateTodayMetrics}
-        onAddLead={addLead}
-        onUpdateLead={updateLead}
-        editingLead={editingLead}
-        onClearData={clearData}
-        initialTab={modalInitialTab}
-      />
+      {metrics && metrics.length > 0 && (
+        <DataEntryModal 
+          isOpen={isModalOpen} 
+          onClose={() => {
+            setIsModalOpen(false);
+            setEditingLead(null);
+          }} 
+          currentMetrics={metrics[metrics.length - 1]}
+          onSaveMetrics={updateTodayMetrics}
+          onAddLead={addLead}
+          onUpdateLead={updateLead}
+          editingLead={editingLead}
+          onClearData={clearData}
+          initialTab={modalInitialTab}
+        />
+      )}
 
-      <DailyReportModal
-        isOpen={isReportModalOpen}
-        onClose={() => setIsReportModalOpen(false)}
-        metrics={metrics[metrics.length - 1]}
-        leads={leads}
-      />
+      {metrics && metrics.length > 0 && (
+        <DailyReportModal
+          isOpen={isReportModalOpen}
+          onClose={() => setIsReportModalOpen(false)}
+          metrics={metrics[metrics.length - 1]}
+          leads={leads}
+        />
+      )}
     </div>
   );
 }

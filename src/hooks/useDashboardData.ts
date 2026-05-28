@@ -1,41 +1,51 @@
 import { format } from 'date-fns';
-import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import type { DailyMetrics, Lead } from '../types';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 export function useDashboardData(userId: string | null) {
-  const [metrics, setMetrics] = useState<DailyMetrics[]>([]);
-  const [leads, setLeads] = useState<Lead[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    async function loadData() {
-      if (!userId) return;
-      
-      const { data: leadsData } = await supabase.from('leads').select('*').eq('user_id', userId).order('created_at', { ascending: false });
-      if (leadsData) {
-        // Map promisedate to promiseDate and service_type to serviceType
-        setLeads(leadsData.map(l => ({
-          ...l,
-          promiseDate: l.promisedate,
-          serviceType: l.service_type
-        })));
+  const { data: leads = [], isLoading: loadingLeads } = useQuery({
+    queryKey: ['leads', userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data: leadsData, error } = await supabase.from('leads').select('*').eq('user_id', userId).order('created_at', { ascending: false });
+      if (error) {
+        toast.error(`Erro ao carregar leads: ${error.message}`);
+        return [];
       }
+      return (leadsData || []).map(l => ({
+        ...l,
+        promiseDate: l.promisedate,
+        serviceType: l.service_type
+      })) as Lead[];
+    },
+    enabled: !!userId,
+  });
 
+  const { data: metrics = [], isLoading: loadingMetrics } = useQuery({
+    queryKey: ['metrics', userId],
+    queryFn: async () => {
+      if (!userId) return [];
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      const { data: metricsData } = await supabase
+      const { data: metricsData, error } = await supabase
         .from('daily_metrics')
         .select('*')
         .eq('user_id', userId)
         .gte('date', format(thirtyDaysAgo, 'yyyy-MM-dd'))
         .order('date', { ascending: true });
 
+      if (error) {
+        toast.error(`Erro ao carregar métricas: ${error.message}`);
+      }
+
       const paddedMetrics: DailyMetrics[] = [];
       const dataMap = new Map();
       if (metricsData) {
         metricsData.forEach(m => {
-          // Map lowercase DB columns to camelCase frontend
           dataMap.set(m.date, {
             date: m.date,
             messagesSent: m.messagessent || 0,
@@ -57,113 +67,136 @@ export function useDashboardData(userId: string | null) {
           paddedMetrics.push({ date: dateStr, messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0 });
         }
       }
+      return paddedMetrics;
+    },
+    enabled: !!userId,
+  });
+
+  const updateMetricsMutation = useMutation({
+    mutationFn: async ({ newMetrics, isIncremental }: { newMetrics: Partial<DailyMetrics>, isIncremental: boolean }) => {
+      if (!userId) throw new Error("No user ID");
+      const today = format(new Date(), 'yyyy-MM-dd');
+      const { data: existing } = await supabase.from('daily_metrics').select('*').eq('user_id', userId).eq('date', today).maybeSingle();
       
-      setMetrics(paddedMetrics);
-      setLoading(false);
-    }
-    
-    loadData();
-  }, [userId]);
-
-  const updateTodayMetrics = async (newMetrics: Partial<DailyMetrics>, isIncremental = false) => {
-    if (!userId) return;
-    const today = format(new Date(), 'yyyy-MM-dd');
-    const { data: existing } = await supabase.from('daily_metrics').select('*').eq('user_id', userId).eq('date', today).maybeSingle();
-    
-    const dbPayload: any = {};
-    if (isIncremental) {
-      dbPayload.messagessent = (existing?.messagessent || 0) + (newMetrics.messagesSent || 0);
-      dbPayload.messagesreplied = (existing?.messagesreplied || 0) + (newMetrics.messagesReplied || 0);
-      dbPayload.adspend = (existing?.adspend || 0) + (newMetrics.adSpend || 0);
-      dbPayload.lprevenue = (existing?.lprevenue || 0) + (newMetrics.lpRevenue || 0);
-    } else {
-      if (newMetrics.messagesSent !== undefined) dbPayload.messagessent = newMetrics.messagesSent;
-      if (newMetrics.messagesReplied !== undefined) dbPayload.messagesreplied = newMetrics.messagesReplied;
-      if (newMetrics.adSpend !== undefined) dbPayload.adspend = newMetrics.adSpend;
-      if (newMetrics.lpRevenue !== undefined) dbPayload.lprevenue = newMetrics.lpRevenue;
-    }
-    
-    if (existing) {
-      await supabase.from('daily_metrics').update(dbPayload).eq('id', existing.id);
-    } else {
-      await supabase.from('daily_metrics').insert([{ user_id: userId, date: today, ...dbPayload }]);
-    }
-
-    setMetrics(prev => {
-      const copy = [...prev];
-      const last = copy[copy.length - 1];
-      if (last.date === today) {
-        copy[copy.length - 1] = {
-          ...last,
-          messagesSent: dbPayload.messagessent !== undefined ? dbPayload.messagessent : last.messagesSent,
-          messagesReplied: dbPayload.messagesreplied !== undefined ? dbPayload.messagesreplied : last.messagesReplied,
-          adSpend: dbPayload.adspend !== undefined ? dbPayload.adspend : last.adSpend,
-          lpRevenue: dbPayload.lprevenue !== undefined ? dbPayload.lprevenue : last.lpRevenue,
-        };
+      const dbPayload: any = {};
+      if (isIncremental) {
+        dbPayload.messagessent = (existing?.messagessent || 0) + (newMetrics.messagesSent || 0);
+        dbPayload.messagesreplied = (existing?.messagesreplied || 0) + (newMetrics.messagesReplied || 0);
+        dbPayload.adspend = (existing?.adspend || 0) + (newMetrics.adSpend || 0);
+        dbPayload.lprevenue = (existing?.lprevenue || 0) + (newMetrics.lpRevenue || 0);
+      } else {
+        if (newMetrics.messagesSent !== undefined) dbPayload.messagessent = newMetrics.messagesSent;
+        if (newMetrics.messagesReplied !== undefined) dbPayload.messagesreplied = newMetrics.messagesReplied;
+        if (newMetrics.adSpend !== undefined) dbPayload.adspend = newMetrics.adSpend;
+        if (newMetrics.lpRevenue !== undefined) dbPayload.lprevenue = newMetrics.lpRevenue;
       }
-      return copy;
-    });
-  };
-
-  const addLead = async (leadData: Omit<Lead, 'id'>) => {
-    if (!userId) return;
-    const dbPayload = {
-      user_id: userId,
-      name: leadData.name,
-      status: leadData.status,
-      value: leadData.value,
-      promisedate: leadData.promiseDate,
-      service_type: leadData.serviceType
-    };
-    const { data, error } = await supabase.from('leads').insert([dbPayload]).select().single();
-    if (error) {
-      console.error("Supabase insert error:", error);
-      alert(`Erro ao criar lead: ${error.message}\n\nVerifique se a coluna 'service_type' foi criada na tabela 'leads' no Supabase.`);
+      
+      if (existing) {
+        const { error } = await supabase.from('daily_metrics').update(dbPayload).eq('id', existing.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('daily_metrics').insert([{ user_id: userId, date: today, ...dbPayload }]);
+        if (error) throw error;
+      }
+      return { today, dbPayload };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['metrics', userId] });
+      toast.success('Métricas atualizadas com sucesso!');
+    },
+    onError: (err: any) => {
+      toast.error(`Erro ao atualizar métricas: ${err.message}`);
     }
-    if (data) {
-      setLeads(prev => [{ ...data, promiseDate: data.promisedate, serviceType: data.service_type }, ...prev]);
+  });
+
+  const addLeadMutation = useMutation({
+    mutationFn: async (leadData: Omit<Lead, 'id'>) => {
+      if (!userId) throw new Error("No user ID");
+      const dbPayload = {
+        user_id: userId,
+        name: leadData.name,
+        status: leadData.status,
+        value: leadData.value,
+        promisedate: leadData.promiseDate,
+        service_type: leadData.serviceType
+      };
+      const { data, error } = await supabase.from('leads').insert([dbPayload]).select().single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['leads', userId] });
+      toast.success('Lead adicionado com sucesso!');
+    },
+    onError: (err: any) => {
+      toast.error(`Erro ao criar lead: ${err.message}`);
     }
-  };
+  });
 
-  const updateLead = async (id: string, leadData: Partial<Lead>) => {
-    if (!userId) return;
-    const dbPayload: any = {};
-    if (leadData.name !== undefined) dbPayload.name = leadData.name;
-    if (leadData.status !== undefined) dbPayload.status = leadData.status;
-    if (leadData.value !== undefined) dbPayload.value = leadData.value;
-    if (leadData.promiseDate !== undefined) dbPayload.promisedate = leadData.promiseDate;
-    if (leadData.serviceType !== undefined) dbPayload.service_type = leadData.serviceType;
+  const updateLeadMutation = useMutation({
+    mutationFn: async ({ id, leadData }: { id: string, leadData: Partial<Lead> }) => {
+      if (!userId) throw new Error("No user ID");
+      const dbPayload: any = {};
+      if (leadData.name !== undefined) dbPayload.name = leadData.name;
+      if (leadData.status !== undefined) dbPayload.status = leadData.status;
+      if (leadData.value !== undefined) dbPayload.value = leadData.value;
+      if (leadData.promiseDate !== undefined) dbPayload.promisedate = leadData.promiseDate;
+      if (leadData.serviceType !== undefined) dbPayload.service_type = leadData.serviceType;
 
-    const { data, error } = await supabase.from('leads').update(dbPayload).eq('id', id).eq('user_id', userId).select().single();
-    if (error) {
-      console.error("Supabase update error:", error);
-      alert(`Erro ao atualizar lead: ${error.message}\n\nVerifique se a coluna 'service_type' foi criada na tabela 'leads' no Supabase.`);
+      const { data, error } = await supabase.from('leads').update(dbPayload).eq('id', id).eq('user_id', userId).select().single();
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['leads', userId] });
+      toast.success('Lead atualizado com sucesso!');
+    },
+    onError: (err: any) => {
+      toast.error(`Erro ao atualizar lead: ${err.message}`);
     }
-    if (data) {
-      setLeads(prev => prev.map(l => l.id === id ? { ...data, promiseDate: data.promisedate, serviceType: data.service_type } : l));
+  });
+
+  const removeLeadMutation = useMutation({
+    mutationFn: async (id: string) => {
+      if (!userId) throw new Error("No user ID");
+      const { error } = await supabase.from('leads').delete().eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['leads', userId] });
+      toast.success('Lead removido!');
+    },
+    onError: (err: any) => {
+      toast.error(`Erro ao remover lead: ${err.message}`);
     }
-  };
+  });
 
-  const removeLead = async (id: string) => {
-    if (!userId) return;
-    await supabase.from('leads').delete().eq('id', id);
-    setLeads(prev => prev.filter(l => l.id !== id));
-  };
-
-  const clearData = async () => {
-    if (!userId) return;
-    await supabase.from('leads').delete().eq('user_id', userId);
-    await supabase.from('daily_metrics').delete().eq('user_id', userId);
-    
-    setLeads([]);
-    const paddedMetrics: DailyMetrics[] = [];
-    for (let i = 29; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      paddedMetrics.push({ date: format(d, 'yyyy-MM-dd'), messagesSent: 0, messagesReplied: 0, adSpend: 0, lpRevenue: 0 });
+  const clearDataMutation = useMutation({
+    mutationFn: async () => {
+      if (!userId) throw new Error("No user ID");
+      const { error: err1 } = await supabase.from('leads').delete().eq('user_id', userId);
+      if (err1) throw err1;
+      const { error: err2 } = await supabase.from('daily_metrics').delete().eq('user_id', userId);
+      if (err2) throw err2;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['leads', userId] });
+      queryClient.invalidateQueries({ queryKey: ['metrics', userId] });
+      toast.success('Dados apagados com sucesso!');
+    },
+    onError: (err: any) => {
+      toast.error(`Erro ao apagar dados: ${err.message}`);
     }
-    setMetrics(paddedMetrics);
-  };
+  });
 
-  return { metrics, leads, updateTodayMetrics, addLead, updateLead, removeLead, clearData, loading };
+  return { 
+    metrics, 
+    leads, 
+    updateTodayMetrics: (newMetrics: Partial<DailyMetrics>, isIncremental = false) => updateMetricsMutation.mutate({ newMetrics, isIncremental }), 
+    addLead: (lead: Omit<Lead, 'id'>) => addLeadMutation.mutate(lead), 
+    updateLead: (id: string, lead: Partial<Lead>) => updateLeadMutation.mutate({ id, leadData: lead }), 
+    removeLead: (id: string) => removeLeadMutation.mutate(id), 
+    clearData: () => clearDataMutation.mutate(), 
+    loading: loadingLeads || loadingMetrics 
+  };
 }
