@@ -20,10 +20,10 @@ export function LeadsTable({ leads, onRemoveLead, onEditLead }: Props) {
           <thead>
             <tr className="text-[10px] text-gray-500 uppercase tracking-widest border-b border-white/5">
               <th className="pb-3 font-medium px-4">Nome</th>
-              <th className="pb-3 font-medium">Serviço</th>
-              <th className="pb-3 font-medium">Retorno</th>
-              <th className="pb-3 font-medium">Valor</th>
-              <th className="pb-3 font-medium">Status</th>
+              <th className="pb-3 font-medium px-4">Serviço</th>
+              <th className="pb-3 font-medium px-4">Retorno</th>
+              <th className="pb-3 font-medium px-4">Valor</th>
+              <th className="pb-3 font-medium px-4">Status</th>
               <th className="pb-3 font-medium text-right px-4">Ações</th>
             </tr>
           </thead>
@@ -36,17 +36,17 @@ export function LeadsTable({ leads, onRemoveLead, onEditLead }: Props) {
             {leads.map(lead => (
               <tr key={lead.id} className="border-b border-white/5 hover:bg-white/5 transition-colors group">
                 <td className="py-4 px-4 text-sm font-medium text-white">{lead.name}</td>
-                <td className="py-4 text-xs text-gray-400">
+                <td className="py-4 px-4 text-xs text-gray-400">
                   <span className="bg-white/5 px-2 py-1 rounded-md border border-white/10">{lead.serviceType || '--'}</span>
                 </td>
-                <td className="py-4 text-xs text-gray-400">
+                <td className="py-4 px-4 text-xs text-gray-400">
                   {lead.promiseDate ? (
                     <span className="flex items-center gap-2">
                       <CalendarClock className="w-3 h-3 text-[#00A3FF]" /> {lead.promiseDate}
                     </span>
                   ) : '--'}
                 </td>
-                <td className="py-4 text-xs">
+                <td className="py-4 px-4 text-xs">
                   {lead.value ? (
                     lead.status === 'Closed' ? (
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#00A3FF]/10 text-[#00A3FF] border border-[#00A3FF]/20 rounded-lg font-bold text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)] tracking-wide">
@@ -59,7 +59,7 @@ export function LeadsTable({ leads, onRemoveLead, onEditLead }: Props) {
                     <span className="text-gray-500">--</span>
                   )}
                 </td>
-                <td className="py-4">
+                <td className="py-4 px-4">
                   <span className={`px-3 py-1 rounded-md text-[10px] font-bold tracking-wide ${
                     lead.status === 'Replied' ? 'bg-[#10B981]/10 text-[#10B981]' :
                     lead.status === 'Closed' ? 'bg-[#00A3FF]/10 text-[#00A3FF]' :

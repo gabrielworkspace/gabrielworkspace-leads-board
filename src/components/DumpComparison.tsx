@@ -406,28 +406,28 @@ export function DumpComparison() {
             <table className="w-full text-left border-collapse whitespace-nowrap">
               <thead>
                 <tr className="text-xs text-gray-500 border-b border-white/5">
-                  <th className="pb-3 font-medium">Nome do Lead</th>
-                  <th className="pb-3 font-medium">Serviço</th>
-                  <th className="pb-3 font-medium">Resp.</th>
-                  <th className="pb-3 font-medium text-right">Valor</th>
+                  <th className="pb-3 font-medium px-4">Nome do Lead</th>
+                  <th className="pb-3 font-medium px-4">Serviço</th>
+                  <th className="pb-3 font-medium px-4">Resp.</th>
+                  <th className="pb-3 font-medium text-right px-4">Valor</th>
                 </tr>
               </thead>
               <tbody>
                 {topLeads.slice(0, 10).map((lead, idx) => (
                   <tr key={lead.id} className="border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
-                    <td className="py-3 text-sm text-white flex items-center gap-2">
+                    <td className="py-3 px-4 text-sm text-white flex items-center gap-2">
                       <span className="text-gray-600 text-xs w-4">{idx + 1}.</span>
                       <span className="truncate max-w-[120px] sm:max-w-[180px]">{lead.name}</span>
                     </td>
-                    <td className="py-3 text-xs text-gray-400">
+                    <td className="py-3 px-4 text-xs text-gray-400">
                       {lead.serviceType || '--'}
                     </td>
-                    <td className="py-3 text-xs">
+                    <td className="py-3 px-4 text-xs">
                       <span className={`px-2 py-0.5 rounded-full ${lead.user_id === 'gabriel' ? 'bg-[#FF5500]/20 text-[#FF5500]' : 'bg-[#FF8A00]/20 text-[#FF8A00]'}`}>
                         {lead.user_id === 'gabriel' ? 'G' : 'M'}
                       </span>
                     </td>
-                    <td className="py-3 text-sm text-[#FF8A00] font-medium text-right">
+                    <td className="py-3 px-4 text-sm text-[#FF8A00] font-medium text-right">
                       {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(lead.value)}
                     </td>
                   </tr>
