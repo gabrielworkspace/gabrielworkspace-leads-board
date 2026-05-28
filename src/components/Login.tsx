@@ -29,8 +29,8 @@ export function Login({ onLogin }: Props) {
       
       <div className="w-full max-w-md holo-panel p-10 z-10 relative">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-2xl flex-shrink-0 mb-4 flex items-center justify-center">
-            <img src="/orbit_logo.png" alt="Orbit Logo" className="w-16 h-16 object-contain" />
+          <div className="flex-shrink-0 mb-4 flex items-center justify-center">
+            <img src="/orbit_logo.png" alt="Orbit Logo" className="w-auto h-20 object-contain mix-blend-screen" />
           </div>
           <h1 className="text-2xl font-bold tracking-wide text-white">Orbit Workspace</h1>
           <p className="text-gray-400 text-sm mt-2">Área Restrita</p>
