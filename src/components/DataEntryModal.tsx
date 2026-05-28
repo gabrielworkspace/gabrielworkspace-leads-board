@@ -197,7 +197,7 @@ export function DataEntryModal({ isOpen, onClose, currentMetrics, onSaveMetrics,
                     <option value="Replied">Respondeu</option>
                     <option value="Closed">Fechou</option>
                     <option value="Promised">Prometeu dar uma resposta</option>
-                    <option value="Ignored">Sem resposta</option>
+                    <option value="Ignored">Lead s/ resposta</option>
                     <option value="Refused">Recusou</option>
                   </select>
                 </div>

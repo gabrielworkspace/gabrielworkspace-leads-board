@@ -71,7 +71,7 @@ export function LeadsTable({ leads, onRemoveLead, onEditLead }: Props) {
                       lead.status === 'Replied' ? 'Respondeu' :
                       lead.status === 'Closed' ? 'Fechou' :
                       lead.status === 'Promised' ? 'Prometeu' : 
-                      lead.status === 'Refused' ? 'Recusou' : 'Sem resposta'
+                      lead.status === 'Refused' ? 'Recusou' : 'Lead s/ Resposta'
                     }
                   </span>
                 </td>

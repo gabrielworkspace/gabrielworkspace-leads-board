@@ -5,6 +5,7 @@ import type { DailyMetrics, Lead } from '../types';
 export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], leads: Lead[] }) {
   const latest = metrics[metrics.length - 1] || { messagesSent: 0, messagesReplied: 0 };
   const totalReplies = latest.messagesReplied || 0;
+  const messagesUnreplied = (latest.messagesSent || 0) - totalReplies;
   
   const closedLeads = leads.filter(l => l.status === 'Closed').length;
   const repliedLeads = leads.filter(l => l.status === 'Replied').length + closedLeads;
@@ -58,6 +59,12 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
           </div>
           <span className="text-[#00A3FF] font-bold">{totalReplies} respostas</span>
         </div>
+        <div className="flex items-center justify-between text-[11px] pb-2 border-b border-white/5 mb-1">
+          <div className="flex items-center gap-2 text-gray-400 font-medium">
+             Msgs s/ Resposta
+          </div>
+          <span className="text-gray-400 font-medium">{messagesUnreplied} ignoradas</span>
+        </div>
         <div className="flex items-center justify-between text-[11px]">
           <div className="flex items-center gap-2 text-gray-400 font-medium">
             <span className="w-2 h-2 rounded-full bg-[#10B981]"></span> Foco em Leads
@@ -78,7 +85,7 @@ export function DailySummary({ metrics, leads }: { metrics: DailyMetrics[], lead
         </div>
         <div className="flex items-center justify-between text-[11px]">
           <div className="flex items-center gap-2 text-gray-400 font-medium">
-            <span className="w-2 h-2 rounded-full bg-[#6B7280]"></span> Sem Resposta
+            <span className="w-2 h-2 rounded-full bg-[#6B7280]"></span> Leads s/ Resposta
           </div>
           <span className="text-white font-medium">{ignored} perdidos</span>
         </div>
