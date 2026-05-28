@@ -25,6 +25,7 @@ export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) 
     )}>
       {/* Logo */}
       <div className="flex items-center gap-3 mb-10 px-2">
+        <img src="/orbit_logo.png" alt="Orbit Logo" className="w-8 h-8 object-contain" />
         <h1 className="text-xl font-bold tracking-wide text-white">Orbit Workspace</h1>
       </div>
 
