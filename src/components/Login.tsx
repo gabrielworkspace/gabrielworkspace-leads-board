@@ -32,7 +32,7 @@ export function Login({ onLogin }: Props) {
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00A3FF] to-[#0055FF] flex-shrink-0 shadow-[0_0_30px_rgba(0,163,255,0.3)] mb-4 flex items-center justify-center">
             <Lock className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold tracking-wide text-white">Gabriel Workspace</h1>
+          <h1 className="text-2xl font-bold tracking-wide text-white">Orbit Workspace</h1>
           <p className="text-gray-400 text-sm mt-2">Área Restrita</p>
         </div>
 

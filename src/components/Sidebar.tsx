@@ -25,7 +25,7 @@ export function Sidebar({ activeView, setActiveView, onLogout, isOpen }: Props) 
     )}>
       {/* Logo */}
       <div className="flex items-center gap-3 mb-10 px-2">
-        <h1 className="text-xl font-bold tracking-wide text-white">Gabriel Workspace</h1>
+        <h1 className="text-xl font-bold tracking-wide text-white">Orbit Workspace</h1>
       </div>
 
       <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-8 no-scrollbar">
