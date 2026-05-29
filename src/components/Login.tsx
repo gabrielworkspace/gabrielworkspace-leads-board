@@ -29,7 +29,7 @@ export function Login({ onLogin }: Props) {
       
       <div className="w-full max-w-md holo-panel p-10 z-10 relative">
         <div className="flex flex-col items-center mb-8">
-          <img src={logo} alt="GW Hub Logo" className="h-16 mb-4" />
+          <img src={logo} alt="GW Hub Logo" className="h-20 mb-4" />
           <h1 className="text-2xl font-bold tracking-wide text-white">GW Hub</h1>
           <p className="text-gray-400 text-sm mt-2">Área Restrita</p>
         </div>
