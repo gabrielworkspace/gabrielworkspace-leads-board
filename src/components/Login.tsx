@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Lock } from 'lucide-react';
+
 import logo from '../../img/logo_gwbranca.svg';
 interface Props {
   onLogin: (userId: string) => void;
