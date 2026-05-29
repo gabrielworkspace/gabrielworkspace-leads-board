@@ -1,7 +1,7 @@
 import { LayoutDashboard, CheckSquare, Layers, Trophy, Calendar, LogOut, Users } from 'lucide-react';
 import { clsx } from 'clsx';
 import { NavLink } from 'react-router-dom';
-
+import logo from '../../img/logo_gwbranca.svg';
 interface Props {
   onLogout: () => void;
   isOpen?: boolean;
@@ -25,7 +25,8 @@ export function Sidebar({ onLogout, isOpen, onCloseMobile }: Props) {
     )}>
       {/* Logo */}
       <div className="flex items-center gap-3 mb-10 px-2">
-        <h1 className="text-xl font-bold tracking-wide text-white">Orbit Workspace</h1>
+        <img src={logo} alt="Workspace Logo" className="h-8" />
+        <h1 className="text-xl font-bold tracking-wide text-white">Workspace</h1>
       </div>
 
       <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-8 no-scrollbar">
