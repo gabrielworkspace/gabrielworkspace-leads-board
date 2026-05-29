@@ -25,8 +25,8 @@ export function Sidebar({ onLogout, isOpen, onCloseMobile }: Props) {
     )}>
       {/* Logo */}
       <div className="flex items-center gap-3 mb-10 px-2">
-        <img src={logo} alt="Workspace Logo" className="h-8" />
-        <h1 className="text-xl font-bold tracking-wide text-white">Workspace</h1>
+        <img src={logo} alt="GW Hub Logo" className="h-8" />
+        <h1 className="text-xl font-bold tracking-wide text-white">GW Hub</h1>
       </div>
 
       <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-8 no-scrollbar">
